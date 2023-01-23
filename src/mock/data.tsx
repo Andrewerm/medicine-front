@@ -4,17 +4,12 @@ mock.onGet('/acl')
     .reply(() => {
             const resp = {
                 data: {},
-                acl: [{
-                    action: 'read',
-                    subject: 'Register'
-                }, {
-                    action: 'read',
-                    subject: 'Login'
-                },
-                    {
+                acl:
+                    [{
                         action: 'read',
-                        subject: 'Surveys'
-                    }]
+                        subject: 'Auth'
+                    }
+                    ]
 
             }
             return [200, resp]

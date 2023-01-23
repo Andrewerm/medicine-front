@@ -8,38 +8,23 @@ import {LoginPage} from "./pages/LoginPage";
 import {SurveyPage} from "./pages/SurveyPage";
 import {HospitalsPage} from "./pages/HospitalsPage";
 import {UsersPage} from "./pages/UsersPage";
-import {AbilityContext, Can} from "./hooks/Can"
-import {useAbility} from "@casl/react";
-import axios, {AxiosError} from "axios";
-import {useContext, useEffect, useState} from "react";
+import {AbilityContext} from "./hooks/Can"
+import {useEffect} from "react";
 import {AjaxRoutes} from "./models/ajaxRoutes";
-import {Spinner} from "./components/Spinner";
-import {createMongoAbility} from "@casl/ability";
+import {useAbility} from "@casl/react";
 
-type Actions = 'read' | 'update';
-type Subjects = 'Login' | 'Register' | 'Hospitals' | 'Users' | 'Surveys';
-
-interface ACLInterface {
-    acl: {
-        actions: Actions,
-        subjects: Subjects
-    },
-    data: {}
-}
 
 
 export default function App() {
     // const [loading, setLoading] = useState(false);
 
-    const ability = useContext(AbilityContext);
-    const location=useLocation()
-    const navigate=useNavigate()
+    const ability = useAbility(AbilityContext);
+    const location = useLocation()
+    const navigate = useNavigate()
     useEffect(() => {
-
-        if (location.pathname!=='/auth/login' && ability.can('read','Login')){
-
-
-            navigate('/auth/login', {replace:true })
+        const authRoutes = [AjaxRoutes.LOGIN, AjaxRoutes.REGISTER]
+        if (!authRoutes.includes(location.pathname as AjaxRoutes) && ability.can('read', 'Auth')) {
+            navigate(AjaxRoutes.LOGIN, {replace: true})
         }
     }, []);
 
@@ -48,22 +33,18 @@ export default function App() {
 
     return (
         <>
-            {/*<Can I='read' a='Login'>*/}
-            {/*    <div>read login</div>*/}
-            {/*</Can>*/}
-             <Routes>
+            <Routes>
                 <Route path="/" element={<AppLayout/>}>
-                    {ability.can('read','Surveys')&&<Route path="" element={<MainLayout/>}>
-                        {ability.can('read','Surveys')&&<Route index element={<SurveyPage/>}/>}
+                    {ability.can('read', 'Surveys') && <Route path="" element={<MainLayout/>}>
+                        {ability.can('read', 'Surveys') && <Route index element={<SurveyPage/>}/>}
                         <Route path="hospitals" element={<HospitalsPage/>}/>
                         <Route path="users" element={<UsersPage/>}/>
 
                     </Route>}
-                    <Route path="auth" element={<AuthLayout/>}>
-
-                        {ability.can('read','Login')&&<Route path="login" element={<LoginPage/>}/>}
-                        {ability.can('read','Login')&&<Route path="register" element={<RegisterPage/>}/>}
-                    </Route>
+                    {ability.can('read', 'Auth') && <Route path="auth" element={<AuthLayout/>}>
+                        <Route path="login" element={<LoginPage/>}/>
+                        <Route path="register" element={<RegisterPage/>}/>
+                    </Route>}
                     <Route path="*" element={<NotFoundPage/>}/>
                 </Route>
 

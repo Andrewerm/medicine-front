@@ -1,11 +1,14 @@
 import React, {useContext, useEffect, useState} from "react";
 import axios, {AxiosError} from "axios";
 import {AjaxRoutes} from "../models/ajaxRoutes";
-import {AbilityContext} from "../hooks/Can";
-import {AbilityBuilder, createMongoAbility} from "@casl/ability";
+import {AbilityContext, ACLInterface} from "../hooks/Can";
 
 interface GotAbilityPropsInterface {
     children: React.ReactNode,
+}
+
+interface IGetACL {
+    acl: ACLInterface
 }
 
 const Spinner = () => <div>Спиннер</div>
@@ -14,14 +17,9 @@ export function GetAbility({children}: GotAbilityPropsInterface) {
     const ability = useContext(AbilityContext);
     const [gotAbility, setGotAbility] = useState(false);
     useEffect(() => {
-        axios.get(AjaxRoutes.ACL)
+        axios.get<IGetACL>(AjaxRoutes.ACL)
             .then(response => {
-                console.log('response', response);
-                // const {can, rules} = new AbilityBuilder(createMongoAbility)
-                const rules=createMongoAbility(response.data.acl)
-                // can('read', 'Login')
-                // can('read', 'Register')
-                ability.update(rules)
+                ability.update(response.data.acl)
                 setGotAbility(true)
             })
             .catch((err: AxiosError) => {
