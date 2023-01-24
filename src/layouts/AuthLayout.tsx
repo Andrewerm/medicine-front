@@ -1,10 +1,11 @@
 import {Outlet} from "react-router-dom";
-import {Layout} from 'antd';
+import {Layout, Row, Col} from 'antd';
 import React from "react";
 import {Welcome} from "../components/Welcome";
 
-const {Content, Sider } = Layout;
-export function AuthLayout(){
+const {Content, Sider} = Layout;
+
+export function AuthLayout() {
     const contentStyle: React.CSSProperties = {
         textAlign: 'center',
         // minHeight: 120,
@@ -21,19 +22,23 @@ export function AuthLayout(){
         textAlign: 'center',
         // lineHeight: '120px',
         color: '#fff',
-        // backgroundColor: '#3ba0e9',
+        backgroundColor: '#0960E6',
     };
-    const layoutStyle:React.CSSProperties ={
-        height: '100vh'
+    const layoutStyle: React.CSSProperties = {
+        // height: '100vh'
 
     }
     return (
         <Layout style={layoutStyle}>
 
             <Content style={contentStyle}>
-                <Outlet/>
+                <Row justify="center" align="middle" style={{minHeight: '100vh'}}>
+                    <Col>
+                        <Outlet/>
+                    </Col>
+                </Row>
             </Content>
-            <Sider style={siderStyle}>
+            <Sider width="50%" style={siderStyle} breakpoint="md" collapsedWidth="0" theme="light">
                 <Welcome/>
             </Sider>
         </Layout>

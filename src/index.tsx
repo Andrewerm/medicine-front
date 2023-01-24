@@ -9,40 +9,30 @@ import {AbilityContext} from './hooks/Can'
 
 import './mock'
 import 'antd/dist/reset.css';
-import {App as AppAnt} from 'antd';
+import {App as AppAnt, ConfigProvider } from 'antd';
 import {GetAbility} from "./components/GetAbility";
 import {createMongoAbility} from "@casl/ability";
+import {antCustoms} from "./configs/antCustoms";
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
 
-// define abilities
-// const defineAbility=()=>{
-//     const {can, cannot, build}=new AbilityBuilder(createMongoAbility)
-//     can('read','Posts')
-//     cannot('update','BlaBla')
-//     return build()
-// }
 
-// console.log('defineAbility',defineAbility());
-//  console.log('initialAbility read login',initialAbility.can('read','Login'))
-//  console.log('initialAbility read Register',initialAbility.can('read','Register'))
-//  console.log('initialAbility update login',initialAbility.can('update','Login'))
-//  console.log('initialAbility full',initialAbility)
 root.render(
     <Provider store={store}>
         <AbilityContext.Provider value={createMongoAbility([
-        //     {
-        //     action: 'read',
-        //     subject: 'Login'
-        // }
         ])}>
             <AppAnt>
+                <ConfigProvider
+                    theme={antCustoms}
+                >
                 <GetAbility>
                     <BrowserRouter>
                         <App/>
                     </BrowserRouter>
                 </GetAbility>
+
+                </ConfigProvider>
             </AppAnt>
         </AbilityContext.Provider>
     </Provider>
