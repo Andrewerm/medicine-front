@@ -7,8 +7,8 @@ const { Title } = Typography;
 export function Welcome() {
     return (
         <>
-            <Row align="stretch" gutter={[0,0]} style={{minHeight: '100vh', overflow: "hidden"}}>
-                <Col offset={12} span={10}>
+            <Row justify="space-between" align="stretch" gutter={[0,0]} style={{minHeight: '100vh', overflow: "hidden"}}>
+                <Col push={4} span={24}>
                     <Restangle1/>
                 </Col>
                 <Col span={8}>
@@ -19,7 +19,7 @@ export function Welcome() {
                         Добро пожаловать в медкабинет!
                     </Title>
                 </Col>
-                <Col offset={8} span={12}>
+                <Col push={8} span={24}>
                     <Restangle2/>
                 </Col>
 

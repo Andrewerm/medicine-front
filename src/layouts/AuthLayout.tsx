@@ -24,12 +24,13 @@ export function AuthLayout() {
         color: '#fff',
         backgroundColor: '#0960E6',
     };
-    const layoutStyle: React.CSSProperties = {
-        // height: '100vh'
-
-    }
+    // const layoutStyle: React.CSSProperties = {
+    //     // height: '100vh'
+    //     minHeight: '100vh'
+    //
+    // }
     return (
-        <Layout style={layoutStyle}>
+        <Layout >
 
             <Content style={contentStyle}>
                 <Row justify="center" align="middle" style={{minHeight: '100vh'}}>

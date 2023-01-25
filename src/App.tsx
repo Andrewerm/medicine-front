@@ -10,7 +10,7 @@ import {HospitalsPage} from "./pages/HospitalsPage";
 import {UsersPage} from "./pages/UsersPage";
 import {AbilityContext} from "./hooks/Can"
 import {useEffect} from "react";
-import {AjaxRoutes} from "./models/ajaxRoutes";
+import {AjaxRoutes} from "./configs/ajaxRoutes";
 import {useAbility} from "@casl/react";
 
 
@@ -26,10 +26,11 @@ export default function App() {
         if (!authRoutes.includes(location.pathname as AjaxRoutes) && ability.can('read', 'Auth')) {
             navigate(AjaxRoutes.LOGIN, {replace: true})
         }
+        else if (location.pathname!==AjaxRoutes.HOME && ability.can('read', 'Surveys')){
+
+            navigate(AjaxRoutes.HOME, {replace: true})
+        }
     }, []);
-
-
-    console.log('App read login', ability.can('read', 'Login'));
 
     return (
         <>

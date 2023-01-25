@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import axios, {AxiosError} from "axios";
-import {AjaxRoutes} from "../models/ajaxRoutes";
+import {AjaxRoutes} from "../configs/ajaxRoutes";
 import {AbilityContext, ACLInterface} from "../hooks/Can";
 
 interface GotAbilityPropsInterface {
