@@ -57,7 +57,7 @@ mock.onGet(AjaxRoutes.LOGIN)
         }
     )
 
-mock.onGet(AjaxRoutes.DATA_SURVEYS)
+mock.onGet(AjaxRoutes.GET_SURVEYS)
     .reply(() => {
             const resp = {
                 data: {
@@ -98,7 +98,7 @@ mock.onGet(AjaxRoutes.DATA_SURVEYS)
 
                         },
                         { id:2,
-                        name: 'Опрос по миокарду 2',
+                            title: 'Опрос по миокарду 2',
                         description: 'Краткое описание 2',
                         items: [
                             {

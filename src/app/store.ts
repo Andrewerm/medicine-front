@@ -1,10 +1,10 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
-import surveysReducer from '../features/counter/counterSlice';
+import surveysSlice from "./surveysSlice";
 
 export const store = configureStore({
   reducer: {
-    surveys: surveysReducer,
-  },
+    surveys: surveysSlice
+ },
 });
 
 export type AppDispatch = typeof store.dispatch;
