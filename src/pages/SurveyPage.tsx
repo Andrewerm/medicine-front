@@ -1,30 +1,33 @@
-import {Input, Col, Row} from "antd";
-import {useAppDispatch, useAppSelector} from "../app/hooks";
+import {useAppDispatch, useAppSelector} from "../hooks/reduxHooks";
 import {fetchSurveys} from "../app/surveysSlice";
-import {useEffect} from "react";
-import {SurveyCardCover} from "../components/SurveyCardCover";
-
-
-const {Search} = Input;
+import {useEffect, useState} from "react";
+import {SurveyCard} from "../components/SurveyCard";
+import {SurveysList} from "../components/SurveysList";
 
 export const SurveyPage = () => {
-    const surveys=useAppSelector(state=>state.surveys.surveys);
-    const loadingStatus=useAppSelector(state=>state.surveys.status);
+    const loadingStatus = useAppSelector(state => state.surveys.status);
+    const [currentSurvey, setCurrentSurvey] = useState<number | undefined>();
+    const [surveyView, setSurveyView] = useState(false);
+    const surveys = useAppSelector(state => state.surveys.surveys);
+    const onSurveyEnter = (id: number): void => {
+        setCurrentSurvey(id)
+        setSurveyView(true)
+    }
+    const onSurveyExit = (): void => {
+        setSurveyView(false)
+    }
     const dispatch = useAppDispatch()
     useEffect(() => {
         dispatch(fetchSurveys())
     }, [dispatch]);
 
-
     return (
         <>
-            <Search placeholder="input search text" allowClear style={{width: 200}}/>
-            {loadingStatus==='loading'?<div>Загрузка</div>:<Row>
-                {surveys.map(item=><Col key={item.id}>
-                    <SurveyCardCover title={item.title} description={item.description}></SurveyCardCover>
-                </Col>)}
-
-            </Row>}
+            {loadingStatus === 'loading' ? <div>Загрузка</div> :
+                (surveyView && currentSurvey) ?
+                    <SurveyCard onExit={onSurveyExit} survey={surveys[currentSurvey]}/> :
+                    <SurveysList onSurveyEnter={onSurveyEnter}/>
+            }
         </>
     )
 }

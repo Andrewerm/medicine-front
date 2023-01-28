@@ -9,15 +9,14 @@ import {SurveyPage} from "./pages/SurveyPage";
 import {HospitalsPage} from "./pages/HospitalsPage";
 import {UsersPage} from "./pages/UsersPage";
 import {AbilityContext} from "./hooks/Can"
-import {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {AjaxRoutes} from "./configs/ajaxRoutes";
 import {useAbility} from "@casl/react";
-
+import {TopPanelContext} from "./hooks/topPanel";
 
 
 export default function App() {
-    // const [loading, setLoading] = useState(false);
-
+    const [buttons, setButtons] = useState([]);
     const ability = useAbility(AbilityContext);
     const location = useLocation()
     const navigate = useNavigate()
@@ -25,8 +24,7 @@ export default function App() {
         const authRoutes = [AjaxRoutes.LOGIN, AjaxRoutes.REGISTER]
         if (!authRoutes.includes(location.pathname as AjaxRoutes) && ability.can('read', 'Auth')) {
             navigate(AjaxRoutes.LOGIN, {replace: true})
-        }
-        else if (location.pathname!==AjaxRoutes.HOME && ability.can('read', 'Surveys')){
+        } else if (location.pathname !== AjaxRoutes.HOME && ability.can('read', 'Surveys')) {
 
             navigate(AjaxRoutes.HOME, {replace: true})
         }
@@ -34,22 +32,24 @@ export default function App() {
 
     return (
         <>
-            <Routes>
-                <Route path="/" element={<AppLayout/>}>
-                    {ability.can('read', 'Surveys') && <Route path="" element={<MainLayout/>}>
-                        {ability.can('read', 'Surveys') && <Route index element={<SurveyPage/>}/>}
-                        <Route path="hospitals" element={<HospitalsPage/>}/>
-                        <Route path="users" element={<UsersPage/>}/>
+            <TopPanelContext.Provider value={{buttons, setButtons}}>
+                <Routes>
+                    <Route path="/" element={<AppLayout/>}>
+                        {ability.can('read', 'Surveys') && <Route path="" element={<MainLayout/>}>
+                            {ability.can('read', 'Surveys') && <Route index element={<SurveyPage/>}/>}
+                            <Route path="hospitals" element={<HospitalsPage/>}/>
+                            <Route path="users" element={<UsersPage/>}/>
 
-                    </Route>}
-                    {ability.can('read', 'Auth') && <Route path="auth" element={<AuthLayout/>}>
-                        <Route path="login" element={<LoginPage/>}/>
-                        <Route path="register" element={<RegisterPage/>}/>
-                    </Route>}
-                    <Route path="*" element={<NotFoundPage/>}/>
-                </Route>
+                        </Route>}
+                        {ability.can('read', 'Auth') && <Route path="auth" element={<AuthLayout/>}>
+                            <Route path="login" element={<LoginPage/>}/>
+                            <Route path="register" element={<RegisterPage/>}/>
+                        </Route>}
+                        <Route path="*" element={<NotFoundPage/>}/>
+                    </Route>
 
-            </Routes>
+                </Routes>
+            </TopPanelContext.Provider>
         </>
     )
 }

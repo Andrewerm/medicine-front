@@ -1,7 +1,9 @@
 import {Outlet} from "react-router-dom";
 import {Footer as MyFooter} from "../components/Footer";
-import {Col, Layout, Row, Typography} from 'antd';
+import {Col, Layout, Row, Typography, Divider} from 'antd';
 import {HeartInHand} from "../components/images/HeartInHand";
+import {TopPanel} from "../components/TopPanel";
+
 
 const {Title} = Typography
 const {Header, Footer, Content} = Layout;
@@ -11,7 +13,7 @@ export function MainLayout() {
     const headerStyle: React.CSSProperties = {
         // textAlign: 'center',
         color: '#1048CE',
-        // height: 64,
+        height: "unset",
         paddingInline: 50,
         // lineHeight: '64px',
         backgroundColor: 'white',
@@ -33,6 +35,8 @@ export function MainLayout() {
                         <Title level={2}>Медкабинет</Title>
                     </Col>
                 </Row>
+                <Divider style={{margin: 0}}/>
+                <TopPanel/>
             </Header>
             <Content style={contentStyle}>
                 <Outlet/>
