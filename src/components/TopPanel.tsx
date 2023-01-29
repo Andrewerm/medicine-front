@@ -1,4 +1,4 @@
-import {Col, Row} from "antd";
+import {Divider, Space} from "antd";
 import React, {useContext} from "react";
 import {ITopPanelContext, TopPanelContext} from "../hooks/topPanel";
 
@@ -6,8 +6,11 @@ import {ITopPanelContext, TopPanelContext} from "../hooks/topPanel";
 export const TopPanel = () => {
     const context = useContext<ITopPanelContext | undefined>(TopPanelContext);
     return (
-        <Row gutter={10}>
-            {context?.buttons.map((item: React.ReactNode, index) => <Col key={index}>{item}</Col>)}
-        </Row>
+        <>
+            {(context?.buttons && context?.buttons.length>0) && <Divider style={{margin: 0}}/>}
+            <Space >
+                {context?.buttons.map((item: React.ReactNode, index) => <span key={index}>{item}</span>)}
+            </Space>
+        </>
     )
 }

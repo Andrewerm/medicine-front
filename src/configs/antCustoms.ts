@@ -6,6 +6,11 @@ export const antCustoms = {
     "components": {
         "Typography": {
             "colorTextHeading": "#1048CE"
+        },
+        "Button": {
+            "colorBorder": "#0960E6",
+            "borderRadius": 8,
+            "colorText": "#0960E6"
         }
     }
 }

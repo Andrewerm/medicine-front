@@ -21,8 +21,8 @@ export function MainLayout() {
     };
     const contentStyle : React.CSSProperties = {
         backgroundColor: '#F6FAFF',
-        height: '100%',
-        padding: '20px'
+        // height: '100%',
+        padding: '20px',
     }
     return (
         <>
@@ -35,15 +35,14 @@ export function MainLayout() {
                         <Title level={2}>Медкабинет</Title>
                     </Col>
                 </Row>
-                <Divider style={{margin: 0}}/>
                 <TopPanel/>
             </Header>
             <Content style={contentStyle}>
                 <Outlet/>
             </Content>
-            <Footer>
-                <MyFooter/>
-            </Footer>
+            {/*<Footer>*/}
+            {/*    <MyFooter/>*/}
+            {/*</Footer>*/}
 
         </>
     )

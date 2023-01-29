@@ -1,26 +1,51 @@
-import {ISurvey} from "../types";
+import {ISetAnswer} from "../types";
 import {useContext, useEffect} from "react";
 import {TopPanelContext} from "../hooks/topPanel";
-import {Button} from "antd";
+import {Button, Row, Col, Card, Radio, Space} from "antd";
+import {useAppSelector} from "../hooks/reduxHooks";
 
 interface ISurveyCardProps {
-    onExit:()=>void,
-    survey: ISurvey
+    onExit: () => void,
+    onReport: ()=>void,
+    surveyId: number,
+    selectingAnswer: (value: ISetAnswer)=>void
 }
 
-export const SurveyCard = ({onExit}:ISurveyCardProps) => {
-
-    const topPanelContext= useContext(TopPanelContext);
+export const SurveyCard = ({onExit, surveyId, selectingAnswer, onReport}: ISurveyCardProps) => {
+    const topPanelContext = useContext(TopPanelContext);
+    const survey = useAppSelector(state => state.surveys.surveys.find(item=>item.id===surveyId));
+    const notFullFilled=():boolean|undefined=>survey?.items.some(item=>!item.selectedAnswer)
     useEffect(() => {
-        const buttons=[<Button onClick={()=>{console.log('тестим')}}>кнопка 1</Button>,
-            <Button onClick={onExit}>кнопка 2</Button>
-        ]
+        const buttons = [<Button onClick={onExit}>ВЕРНУТЬСЯ К СПИСКУ ВОПРОСОВ</Button>]
         if (topPanelContext) topPanelContext.setButtons(buttons)
     }, []);
 
-  return (
-      <>
-        <div>опрос</div>
-      </>
-  )
+
+    return (
+        <>
+            {survey && <Row gutter={[0,10]} justify="center">
+                <Col span={24} sm={20} md={18} lg={16} xxl={13} style={{marginBottom:30}}>
+                    <Card title={survey.title}>
+                        Выберите подходящий вариант
+                    </Card>
+                </Col>
+                {survey.items.map(question =>
+                    <Col span={24} sm={20} md={18} lg={16} xxl={13} key={question.id}>
+                        <Card title={question.question}>
+                            <Radio.Group onChange={(e)=>{
+                                selectingAnswer({idSurvey: survey.id, idQuestion: question.id, idAnswer: e.target.value})
+                            }} value={question.selectedAnswer}>
+                                <Space direction="vertical">
+                                    {question.answers.map(answer => <Radio key={answer.id}
+                                                                           value={answer.id}>{answer.variant}</Radio>)}
+                                </Space>
+                            </Radio.Group>
+                        </Card>
+                    </Col>)}
+                <Col span={24} sm={20} md={18} lg={16} xxl={13}>
+                    <Button onClick={onReport} disabled={notFullFilled()} type="primary">Далее</Button>
+                </Col>
+            </Row>}
+        </>
+    )
 }

@@ -1,33 +1,51 @@
 import {useAppDispatch, useAppSelector} from "../hooks/reduxHooks";
-import {fetchSurveys} from "../app/surveysSlice";
+import {fetchSurveys, getReport, setAnswer} from "../app/surveysSlice";
 import {useEffect, useState} from "react";
 import {SurveyCard} from "../components/SurveyCard";
 import {SurveysList} from "../components/SurveysList";
+import {ISetAnswer} from "../types";
+import {SurveyReport} from "../components/SurveyReport";
+import {Spinner} from "../components/Spinner";
 
 export const SurveyPage = () => {
     const loadingStatus = useAppSelector(state => state.surveys.status);
-    const [currentSurvey, setCurrentSurvey] = useState<number | undefined>();
-    const [surveyView, setSurveyView] = useState(false);
     const surveys = useAppSelector(state => state.surveys.surveys);
+    const [currentSurveyId, setCurrentSurveyId] = useState<number | undefined>();
+    const [surveyStep, setSurveyStep] = useState<number>(1);
+    const dispatcher=useAppDispatch()
+    const setAnswerDispatch=({idSurvey,idQuestion, idAnswer}:ISetAnswer)=>dispatcher(setAnswer({idSurvey,idQuestion, idAnswer}))
     const onSurveyEnter = (id: number): void => {
-        setCurrentSurvey(id)
-        setSurveyView(true)
+        setCurrentSurveyId(id)
+        console.log('выбран вопрос id',id);
+        setSurveyStep(2)
     }
     const onSurveyExit = (): void => {
-        setSurveyView(false)
+        setSurveyStep(1)
     }
-    const dispatch = useAppDispatch()
+    const forRequest = surveys.find(item1=>item1.id===currentSurveyId)?.items.map(item => ({idQuestion: item.id, idAnswer: item.selectedAnswer}))
+    const onSurveyReport = () => {
+        if (forRequest && currentSurveyId) dispatcher(getReport({
+            idSurvey: currentSurveyId,
+            items: forRequest
+        }))
+        setSurveyStep(3)
+    }
     useEffect(() => {
-        dispatch(fetchSurveys())
-    }, [dispatch]);
+        dispatcher(fetchSurveys())
+    }, []);
+
+    const switcher=function (){
+        switch (surveyStep) {
+            case 1: return <SurveysList onSurveyEnter={onSurveyEnter}/>
+            case 2: return currentSurveyId && <SurveyCard onReport={onSurveyReport} onExit={onSurveyExit} surveyId={currentSurveyId} selectingAnswer={setAnswerDispatch}/>
+            case 3: return currentSurveyId && <SurveyReport onExit={onSurveyExit} surveyId={currentSurveyId}/>
+        }
+    }
 
     return (
         <>
-            {loadingStatus === 'loading' ? <div>Загрузка</div> :
-                (surveyView && currentSurvey) ?
-                    <SurveyCard onExit={onSurveyExit} survey={surveys[currentSurvey]}/> :
-                    <SurveysList onSurveyEnter={onSurveyEnter}/>
-            }
+            {loadingStatus === 'loading' ? <Spinner/> :switcher()}
         </>
     )
 }
+

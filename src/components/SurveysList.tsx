@@ -19,10 +19,10 @@ export const SurveysList = ({onSurveyEnter}: ISurveysListProps) => {
 
     return (
         <div>
-            <Search placeholder="input search text" allowClear style={{width: 200}}/>
+            <Search placeholder="input search text" allowClear style={{width: 200, marginBottom: 20}}/>
             <Row gutter={[16, 16]}>
                 {surveys.map(item =>
-                    <Col span={24} md={12} key={item.id}>
+                    <Col span={20} md={12} xl={8} key={item.id}>
                         <SurveyCardCover title={item.title}
                                          description={item.description}
                                          onEnter={() => onSurveyEnter(item.id)}/>
