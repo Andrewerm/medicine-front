@@ -1,4 +1,5 @@
 import {Card, Divider, Button} from "antd";
+import React from "react";
 
 interface IPropsSurveyCardCover {
     title: string,
@@ -6,7 +7,7 @@ interface IPropsSurveyCardCover {
     onEnter: ()=>void
 }
 
-export const SurveyCardCover = ({title, description, onEnter}:IPropsSurveyCardCover) => {
+export const SurveyCardCover:React.FC<IPropsSurveyCardCover> = ({title, description, onEnter}) => {
   return (
       <Card title={title}>
           {description}

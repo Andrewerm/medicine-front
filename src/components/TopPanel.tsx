@@ -3,7 +3,7 @@ import React, {useContext} from "react";
 import {ITopPanelContext, TopPanelContext} from "../hooks/topPanel";
 
 
-export const TopPanel = () => {
+export const TopPanel:React.FC = () => {
     const context = useContext<ITopPanelContext | undefined>(TopPanelContext);
     return (
         <>

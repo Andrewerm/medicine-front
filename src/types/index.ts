@@ -5,6 +5,19 @@ export interface ISurvey {
     items: Item[];
     report?:string
 }
+export interface IGetDataSurveys {
+    data: {
+        surveys: Array<ISurvey>
+    }
+}
+
+export interface IGetReport {
+    data: {
+        textReport: string
+    }
+
+}
+
 
 export interface Item {
     id: number;
@@ -16,6 +29,11 @@ export interface Item {
 export interface IGetReportRequest {
     idSurvey: number,
     items:Array<{ idQuestion: number, idAnswer?: number }>
+}
+
+export interface IGetReportResponse{
+    idSurvey:number,
+    textReport:string
 }
 
 export interface Answer {

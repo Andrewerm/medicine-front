@@ -15,7 +15,7 @@ import {useAbility} from "@casl/react";
 import {TopPanelContext} from "./hooks/topPanel";
 
 
-export default function App() {
+export const App:React.FC=()=> {
     const [buttons, setButtons] = useState([]);
     const ability = useAbility(AbilityContext);
     const location = useLocation()
@@ -29,7 +29,6 @@ export default function App() {
             navigate(AjaxRoutes.HOME, {replace: true})
         }
     }, []);
-
     return (
         <>
             <TopPanelContext.Provider value={{buttons, setButtons}}>
@@ -39,7 +38,6 @@ export default function App() {
                             {ability.can('read', 'Surveys') && <Route index element={<SurveyPage/>}/>}
                             <Route path="hospitals" element={<HospitalsPage/>}/>
                             <Route path="users" element={<UsersPage/>}/>
-
                         </Route>}
                         {ability.can('read', 'Auth') && <Route path="auth" element={<AuthLayout/>}>
                             <Route path="login" element={<LoginPage/>}/>
@@ -47,7 +45,6 @@ export default function App() {
                         </Route>}
                         <Route path="*" element={<NotFoundPage/>}/>
                     </Route>
-
                 </Routes>
             </TopPanelContext.Provider>
         </>

@@ -1,17 +1,17 @@
 import {ISetAnswer} from "../types";
-import {useContext, useEffect} from "react";
+import React, {useContext, useEffect} from "react";
 import {TopPanelContext} from "../hooks/topPanel";
 import {Button, Row, Col, Card, Radio, Space} from "antd";
 import {useAppSelector} from "../hooks/reduxHooks";
 
 interface ISurveyCardProps {
-    onExit: () => void,
-    onReport: ()=>void,
+    onExit:  React.MouseEventHandler<HTMLButtonElement|HTMLAnchorElement>,
+    onReport:  React.MouseEventHandler<HTMLButtonElement|HTMLAnchorElement>,
     surveyId: number,
     selectingAnswer: (value: ISetAnswer)=>void
 }
 
-export const SurveyCard = ({onExit, surveyId, selectingAnswer, onReport}: ISurveyCardProps) => {
+export const SurveyCard:React.FC<ISurveyCardProps> = ({onExit, surveyId, selectingAnswer, onReport}) => {
     const topPanelContext = useContext(TopPanelContext);
     const survey = useAppSelector(state => state.surveys.surveys.find(item=>item.id===surveyId));
     const notFullFilled=():boolean|undefined=>survey?.items.some(item=>!item.selectedAnswer)
@@ -19,8 +19,6 @@ export const SurveyCard = ({onExit, surveyId, selectingAnswer, onReport}: ISurve
         const buttons = [<Button onClick={onExit}>ВЕРНУТЬСЯ К СПИСКУ ВОПРОСОВ</Button>]
         if (topPanelContext) topPanelContext.setButtons(buttons)
     }, []);
-
-
     return (
         <>
             {survey && <Row gutter={[0,10]} justify="center">

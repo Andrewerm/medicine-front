@@ -13,7 +13,7 @@ interface IGetACL {
 }
 
 
-export function GetAbility({children}: GotAbilityPropsInterface) {
+export const GetAbility:React.FC<GotAbilityPropsInterface>=({children} )=>{
     const ability = useContext(AbilityContext);
     const [gotAbility, setGotAbility] = useState(false);
     useEffect(() => {

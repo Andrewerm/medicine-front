@@ -1,12 +1,13 @@
 import {Card, Space, Typography} from "antd";
 import {useAppSelector} from "../hooks/reduxHooks";
+import React from "react";
 
 interface ISurveyReportProps {
-    onExit: () => void,
+    onExit:  React.MouseEventHandler<HTMLButtonElement>,
     surveyId: number
 }
 
-export const SurveyReport = ({surveyId}: ISurveyReportProps) => {
+export const SurveyReport:React.FC<ISurveyReportProps> = ({surveyId}) => {
     const survey = useAppSelector(state => state.surveys.surveys.find(item => item.id === surveyId))
 
     return (

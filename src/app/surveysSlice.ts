@@ -1,24 +1,7 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import axios from "axios";
 import {AjaxRoutes} from "../configs/ajaxRoutes";
-import {IGetReportRequest, ISetAnswer, ISurvey} from "../types";
-
-interface IGetDataSurveys {
-    data: {
-        surveys: Array<ISurvey>
-    }
-}
-
-interface IGetReport {
-    data: {
-        textReport: string
-    }
-
-}
-
-interface ISetAnswerPayload {
- payload: ISetAnswer
-}
+import {IGetDataSurveys, IGetReport, IGetReportRequest, IGetReportResponse, ISetAnswer, ISurvey} from "../types";
 
 export interface SurveysState {
     surveys: Array<ISurvey>
@@ -35,25 +18,20 @@ const initialState: SurveysState = {
 // will call the thunk with the `dispatch` function as the first argument. Async
 // code can then be executed and other actions can be dispatched. Thunks are
 // typically used to make async requests.
-export const fetchSurveys = createAsyncThunk(
+export const fetchSurveys = createAsyncThunk<IGetDataSurveys>(
     'surveys/fetchSurveys',
     async ( ) => {
         const response = await axios.get<IGetDataSurveys>(AjaxRoutes.GET_SURVEYS)
-        console.log('response', response);
-
-        // The value we return becomes the `fulfilled` action payload
         return response.data;
     }
 );
 
-export const getReport = createAsyncThunk(
+export const getReport = createAsyncThunk<IGetReportResponse,IGetReportRequest>(
     'surveys/getReport',
-    async (data:IGetReportRequest ) => {
-        console.log('createAsyncThunk data',data);
-        const response = await axios.post<IGetReport>(AjaxRoutes.GET_REPORT, data)
-        console.log('response', response);
+    async (arg) => {
+        const response = await axios.post<IGetReport>(AjaxRoutes.GET_REPORT, arg)
         return {
-            idSurvey:data.idSurvey,
+            idSurvey:arg.idSurvey,
             textReport:response.data.data.textReport
         }
     }
@@ -67,7 +45,8 @@ export const surveysSlice = createSlice({
         // addSurveys(state, action) {
         //     state.surveys = action.payload
         // },
-        setAnswer(state, {payload:{idSurvey,idQuestion, idAnswer}}:ISetAnswerPayload) {
+        setAnswer(state, {payload}: PayloadAction<ISetAnswer>) {
+            const {idSurvey,idQuestion, idAnswer}=payload
             const survey=state.surveys?.find(item=>item.id===idSurvey)
             const question=survey?.items?.find(item2=>item2.id===idQuestion)
             if (question) question.selectedAnswer=idAnswer
@@ -95,7 +74,7 @@ export const surveysSlice = createSlice({
             .addCase(getReport.fulfilled, (state, action) => {
                 state.status = 'idle';
                 const survey=state.surveys.find(item=>item.id===action.payload.idSurvey)
-                // if (survey) survey.report=action.payload.textReport
+                if (survey) survey.report=action.payload.textReport
             })
             .addCase(getReport.rejected, (state) => {
                 state.status = 'failed';

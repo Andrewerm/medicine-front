@@ -1,13 +1,13 @@
 import {useAppDispatch, useAppSelector} from "../hooks/reduxHooks";
 import {fetchSurveys, getReport, setAnswer} from "../app/surveysSlice";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {SurveyCard} from "../components/SurveyCard";
 import {SurveysList} from "../components/SurveysList";
 import {ISetAnswer} from "../types";
 import {SurveyReport} from "../components/SurveyReport";
 import {Spinner} from "../components/Spinner";
 
-export const SurveyPage = () => {
+export const SurveyPage:React.FC = () => {
     const loadingStatus = useAppSelector(state => state.surveys.status);
     const surveys = useAppSelector(state => state.surveys.surveys);
     const [currentSurveyId, setCurrentSurveyId] = useState<number | undefined>();
@@ -19,7 +19,7 @@ export const SurveyPage = () => {
         console.log('выбран вопрос id',id);
         setSurveyStep(2)
     }
-    const onSurveyExit = (): void => {
+    const onSurveyExit: React.MouseEventHandler = (): void => {
         setSurveyStep(1)
     }
     const forRequest = surveys.find(item1=>item1.id===currentSurveyId)?.items.map(item => ({idQuestion: item.id, idAnswer: item.selectedAnswer}))

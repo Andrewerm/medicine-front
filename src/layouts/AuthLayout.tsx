@@ -5,7 +5,7 @@ import {Welcome} from "../components/Welcome";
 
 const {Content, Sider} = Layout;
 
-export function AuthLayout() {
+export const AuthLayout:React.FC=()=>{
     const contentStyle: React.CSSProperties = {
         textAlign: 'center',
         // minHeight: 120,

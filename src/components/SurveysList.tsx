@@ -10,7 +10,7 @@ interface ISurveysListProps {
 const {Search} = Input;
 
 
-export const SurveysList = ({onSurveyEnter}: ISurveysListProps) => {
+export const SurveysList:React.FC<ISurveysListProps> = ({onSurveyEnter}) => {
     const surveys = useAppSelector(state => state.surveys.surveys);
     const context= useContext(TopPanelContext);
     useEffect(() => {

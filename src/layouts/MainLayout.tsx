@@ -1,15 +1,16 @@
 import {Outlet} from "react-router-dom";
 import {Footer as MyFooter} from "../components/Footer";
-import {Col, Layout, Row, Typography, Divider} from 'antd';
+import {Col, Layout, Row, Typography} from 'antd';
 import {HeartInHand} from "../components/images/HeartInHand";
 import {TopPanel} from "../components/TopPanel";
+import React from "react";
 
 
 const {Title} = Typography
 const {Header, Footer, Content} = Layout;
 
 
-export function MainLayout() {
+export const MainLayout:React.FC=()=>{
     const headerStyle: React.CSSProperties = {
         // textAlign: 'center',
         color: '#1048CE',

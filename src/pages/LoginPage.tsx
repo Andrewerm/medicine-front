@@ -1,9 +1,9 @@
-import {Typography, Button, Form, Input} from 'antd';
+import {Typography, Button, Form, Input, InputRef} from 'antd';
 import {Link, useNavigate} from "react-router-dom";
 import {AjaxRoutes} from "../configs/ajaxRoutes";
 import axios, {AxiosError} from "axios";
 import {AbilityContext, ACLInterface} from "../hooks/Can";
-import {useContext} from "react";
+import React, {useContext, useEffect, useRef} from "react";
 
 const {Title} = Typography;
 
@@ -14,10 +14,14 @@ export interface IGetLogin {
     }
 }
 
-export const LoginPage = () => {
+export const LoginPage:React.FC = () => {
+    const inputRef = useRef<InputRef>(null);
     const [form] = Form.useForm();
     const ability = useContext(AbilityContext);
     const navigate = useNavigate()
+    useEffect(()=>{
+        if (inputRef.current) inputRef.current.focus()
+    },[])
     const onFinish = (values: any) => {
         console.log('Success:', values);
         axios.get<IGetLogin>(AjaxRoutes.LOGIN)
@@ -53,6 +57,7 @@ export const LoginPage = () => {
                 >
                     <Input
                         placeholder="Введите Email или телефон"
+                        ref={inputRef}
                     />
                 </Form.Item>
 
