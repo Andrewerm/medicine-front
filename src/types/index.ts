@@ -46,3 +46,11 @@ export interface ISetAnswer {
     idQuestion: number,
     idAnswer: number
 }
+
+export enum ACLEntityEnum {
+    AUTH='Auth',
+    HOSPITALS='Hospitals',
+    USERS='Users',
+    SURVEYS='Surveys'
+
+}

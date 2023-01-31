@@ -13,19 +13,19 @@ import React, {useEffect, useState} from "react";
 import {AjaxRoutes} from "./configs/ajaxRoutes";
 import {useAbility} from "@casl/react";
 import {TopPanelContext} from "./hooks/topPanel";
+import {ACLEntityEnum} from "./types";
 
 
-export const App:React.FC=()=> {
+export const App: React.FC = () => {
     const [buttons, setButtons] = useState([]);
     const ability = useAbility(AbilityContext);
     const location = useLocation()
     const navigate = useNavigate()
     useEffect(() => {
         const authRoutes = [AjaxRoutes.LOGIN, AjaxRoutes.REGISTER]
-        if (!authRoutes.includes(location.pathname as AjaxRoutes) && ability.can('read', 'Auth')) {
+        if (!authRoutes.includes(location.pathname as AjaxRoutes) && ability.can('read', ACLEntityEnum.AUTH)) {
             navigate(AjaxRoutes.LOGIN, {replace: true})
-        } else if (location.pathname !== AjaxRoutes.HOME && ability.can('read', 'Surveys')) {
-
+        } else if (location.pathname !== AjaxRoutes.HOME && ability.can('read', ACLEntityEnum.AUTH)) {
             navigate(AjaxRoutes.HOME, {replace: true})
         }
     }, []);
@@ -34,12 +34,12 @@ export const App:React.FC=()=> {
             <TopPanelContext.Provider value={{buttons, setButtons}}>
                 <Routes>
                     <Route path="/" element={<AppLayout/>}>
-                        {ability.can('read', 'Surveys') && <Route path="" element={<MainLayout/>}>
-                            {ability.can('read', 'Surveys') && <Route index element={<SurveyPage/>}/>}
-                            <Route path="hospitals" element={<HospitalsPage/>}/>
-                            <Route path="users" element={<UsersPage/>}/>
-                        </Route>}
-                        {ability.can('read', 'Auth') && <Route path="auth" element={<AuthLayout/>}>
+                         <Route path="" element={<MainLayout/>}>
+                            {ability.can('read', ACLEntityEnum.SURVEYS) && <Route index element={<SurveyPage/>}/>}
+                            {(ability.can('read',ACLEntityEnum.HOSPITALS) || ability.can('update',ACLEntityEnum.HOSPITALS))&& <Route path="hospitals" element={<HospitalsPage/>}/>}
+                            {(ability.can('read',ACLEntityEnum.USERS) || ability.can('update', ACLEntityEnum.USERS) )&& <Route path="users" element={<UsersPage/>}/>}
+                        </Route>
+                        {ability.can('read', ACLEntityEnum.AUTH) && <Route path="auth" element={<AuthLayout/>}>
                             <Route path="login" element={<LoginPage/>}/>
                             <Route path="register" element={<RegisterPage/>}/>
                         </Route>}
