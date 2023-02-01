@@ -6,6 +6,9 @@ export enum AjaxRoutes {
     REMIND_PASSWORD='/auth/remind',
     HOME='/',
     GET_SURVEYS='/guides/surveys',
-    GET_REPORT='/guides/get_report'
+    GET_REPORT='/guides/get_report',
+    GET_USERS='/guides/users',
+    POST_USER='/guides/users',
+    PATCH_USER='/guides/users'
 
 }

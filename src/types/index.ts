@@ -2,7 +2,7 @@ export interface ISurvey {
     id: number;
     title: string;
     description: string;
-    items: Item[];
+    items: ISurveyItem[];
     report?:string
 }
 export interface IGetDataSurveys {
@@ -18,8 +18,11 @@ export interface IGetReport {
 
 }
 
+export interface IUserProfile {
+    FIO: string|null
+}
 
-export interface Item {
+export interface ISurveyItem {
     id: number;
     question: string;
     answers: Answer[];

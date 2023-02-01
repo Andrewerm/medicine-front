@@ -24,7 +24,9 @@ mock.onGet(AjaxRoutes.ACL)
     .reply(() => {
             const resp = {
                 data: {
-                    FIO: 'Иванов Иван Иванович'
+                    userData: {
+                        FIO: 'Иванов Иван Иванович'
+                    }
                 },
                 acl:
                     [
@@ -50,7 +52,9 @@ mock.onGet(AjaxRoutes.LOGIN)
     .reply(() => {
             const resp = {
                 data: {
-                    FIO: 'Иванов Иван Иванович'
+                    userData: {
+                        FIO: 'Иванов Иван Иванович'
+                    }
                 },
                 acl:
                     [
@@ -349,17 +353,17 @@ mock.onPost(AjaxRoutes.GET_REPORT)
 
 
 mock.onDelete(AjaxRoutes.LOGOUT)
-.reply(()=>{
-    const resp = {
-        data: {},
-        acl:
-            [
-                {
-                    action: 'read',
-                    subject: ACLEntityEnum.AUTH
-                }
-            ]
+    .reply(() => {
+        const resp = {
+            data: {},
+            acl:
+                [
+                    {
+                        action: 'read',
+                        subject: ACLEntityEnum.AUTH
+                    }
+                ]
 
-    }
-    return [200, resp]
-})
+        }
+        return [200, resp]
+    })

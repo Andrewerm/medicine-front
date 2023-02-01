@@ -4,9 +4,8 @@ import {Col, Layout, Menu, Row, Space, Typography} from 'antd';
 import type { MenuProps } from 'antd';
 import {HeartInHand} from "../components/images/HeartInHand";
 import {TopPanel} from "../components/TopPanel";
-import React, {ReactEventHandler, useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {ProfileBar} from "../components/ProfileBar";
-import {ItemType} from "antd/es/menu/hooks/useItems";
 
 
 const {Title} = Typography
@@ -49,7 +48,6 @@ export const MainLayout: React.FC = () => {
         console.log('menuSelect',e);
         navigate(e.key)
     }
-    // setSelectedKey([location.pathname.slice(1)])
     useEffect(() => {
         console.log('location.pathname',location.pathname.slice(1));
         setSelectedKey([location.pathname.slice(1)])
@@ -63,7 +61,7 @@ export const MainLayout: React.FC = () => {
                     <Col span={20} sm={8}>
                         <Space align="center">
                             <HeartInHand/>
-                            <Title style={{margin:0}} level={2}>Медкабинет</Title>
+                            <Title style={{margin:0}} level={3}>Медкабинет</Title>
                         </Space>
                     </Col>
                     <Col span={4} sm={8}>

@@ -4,30 +4,34 @@ import {AjaxRoutes} from "../configs/ajaxRoutes";
 import axios, {AxiosError} from "axios";
 import {AbilityContext, ACLInterface} from "../hooks/Can";
 import React, {useContext, useEffect, useRef} from "react";
+import {IUserProfile} from "../types";
+import {ProfileDataContext} from "../hooks/ProfileData";
 
 const {Title} = Typography;
 
 export interface IGetLogin {
     acl: ACLInterface,
-    userData: {
-        FIO: string
+    data: {
+        userData: IUserProfile
     }
 }
 
-export const LoginPage:React.FC = () => {
+export const LoginPage: React.FC = () => {
     const inputRef = useRef<InputRef>(null);
     const [form] = Form.useForm();
     const ability = useContext(AbilityContext);
+    const {setDataUser} = useContext(ProfileDataContext);
     const navigate = useNavigate()
-    useEffect(()=>{
+    useEffect(() => {
         if (inputRef.current) inputRef.current.focus()
-    },[])
+    }, [])
     const onFinish = (values: any) => {
         console.log('Success:', values);
         axios.get<IGetLogin>(AjaxRoutes.LOGIN)
             .then(response => {
-                console.log('response',response);
+                console.log('response', response);
                 ability.update(response.data.acl)
+                setDataUser(response.data.data.userData)
                 navigate(AjaxRoutes.HOME, {replace: true})
             })
             .catch((err: AxiosError) => {
@@ -73,15 +77,15 @@ export const LoginPage:React.FC = () => {
                 {/*    <Checkbox>Remember me</Checkbox>*/}
                 {/*</Form.Item>*/}
 
-                <Form.Item >
+                <Form.Item>
                     <Button type="primary" block htmlType="submit">
                         Войти
                     </Button>
                 </Form.Item>
-                <Form.Item wrapperCol={{pull:6}}>
+                <Form.Item wrapperCol={{pull: 6}}>
                     <Link to={AjaxRoutes.REMIND_PASSWORD}>Забыли пароль?</Link><p/>
                 </Form.Item>
-                <Form.Item wrapperCol={{pull:6}}>
+                <Form.Item wrapperCol={{pull: 6}}>
                     <Link to={AjaxRoutes.REGISTER}>Зарегистрироваться</Link>
                 </Form.Item>
             </Form>

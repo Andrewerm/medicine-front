@@ -13,6 +13,7 @@ import {App as AppAnt, ConfigProvider} from 'antd';
 import {GetAbility} from "./components/GetAbility";
 import {createMongoAbility} from "@casl/ability";
 import {antCustoms} from "./configs/antCustoms";
+import {ProfileData} from "./hooks/ProfileData";
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);
@@ -20,17 +21,19 @@ const root = createRoot(container);
 
 root.render(
     <Provider store={store}>
-        <AbilityContext.Provider value={createMongoAbility([])}>
-            <AppAnt>
-                <ConfigProvider theme={antCustoms}>
-                    <GetAbility>
-                        <BrowserRouter>
-                            <App/>
-                        </BrowserRouter>
-                    </GetAbility>
-                </ConfigProvider>
-            </AppAnt>
-        </AbilityContext.Provider>
+        <ProfileData>
+            <AbilityContext.Provider value={createMongoAbility([])}>
+                <AppAnt>
+                    <ConfigProvider theme={antCustoms}>
+                        <GetAbility>
+                            <BrowserRouter>
+                                <App/>
+                            </BrowserRouter>
+                        </GetAbility>
+                    </ConfigProvider>
+                </AppAnt>
+            </AbilityContext.Provider>
+        </ProfileData>
     </Provider>
 );
 
