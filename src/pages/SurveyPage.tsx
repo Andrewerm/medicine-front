@@ -37,7 +37,10 @@ export const SurveyPage:React.FC = () => {
     const switcher=function (){
         switch (surveyStep) {
             case 1: return <SurveysList onSurveyEnter={onSurveyEnter}/>
-            case 2: return currentSurveyId && <SurveyCard onReport={onSurveyReport} onExit={onSurveyExit} surveyId={currentSurveyId} selectingAnswer={setAnswerDispatch}/>
+            case 2: return currentSurveyId && <SurveyCard onReport={onSurveyReport}
+                                                          onExit={onSurveyExit}
+                                                          surveyId={currentSurveyId}
+                                                          selectingAnswer={setAnswerDispatch}/>
             case 3: return currentSurveyId && <SurveyReport onExit={onSurveyExit} surveyId={currentSurveyId}/>
         }
     }

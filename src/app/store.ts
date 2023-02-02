@@ -1,9 +1,11 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import surveysSlice from "./surveysSlice";
+import usersSlice from "./userSlice";
 
 export const store = configureStore({
   reducer: {
-    surveys: surveysSlice
+    surveys: surveysSlice,
+    users: usersSlice
  },
 });
 

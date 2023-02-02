@@ -45,11 +45,9 @@ export const MainLayout: React.FC = () => {
     const [selectedKey, setSelectedKey] = useState<string[]>()
     const location=useLocation()
     const menuSelect=(e:any)=>{
-        console.log('menuSelect',e);
         navigate(e.key)
     }
     useEffect(() => {
-        console.log('location.pathname',location.pathname.slice(1));
         setSelectedKey([location.pathname.slice(1)])
 
     }, []);

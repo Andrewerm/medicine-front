@@ -367,3 +367,23 @@ mock.onDelete(AjaxRoutes.LOGOUT)
         }
         return [200, resp]
     })
+
+
+mock.onGet(AjaxRoutes.GET_USERS)
+.reply(()=>{
+    const resp={
+        data: {
+            users: [
+                {
+                    id: 1,
+                    FIO: 'Петров Петр Петрович',
+                    phone: '+79033333333',
+                    email: 'andrewerm@ya.ru',
+                    idHospitals: 1
+                }
+            ]
+        }
+    }
+
+    return [200, resp]
+})

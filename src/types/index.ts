@@ -5,9 +5,24 @@ export interface ISurvey {
     items: ISurveyItem[];
     report?:string
 }
+
+export interface IUser {
+    id: number,
+    FIO: string,
+    phone: string,
+    email: string,
+    idHospitals: number
+}
+
 export interface IGetDataSurveys {
     data: {
         surveys: Array<ISurvey>
+    }
+}
+
+export interface IGetDataUsers {
+    data: {
+        users: Array<IUser>
     }
 }
 
@@ -15,7 +30,6 @@ export interface IGetReport {
     data: {
         textReport: string
     }
-
 }
 
 export interface IUserProfile {

@@ -19,6 +19,9 @@ export const SurveyCard:React.FC<ISurveyCardProps> = ({onExit, surveyId, selecti
         const buttons = [<Button onClick={onExit}>ВЕРНУТЬСЯ К СПИСКУ ВОПРОСОВ</Button>]
         if (topPanelContext) topPanelContext.setButtons(buttons)
     }, []);
+    useEffect(()=>() => {
+        if (topPanelContext) topPanelContext.setButtons([])
+    }, []);
     return (
         <>
             {survey && <Row gutter={[0,10]} justify="center">

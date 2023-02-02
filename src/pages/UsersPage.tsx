@@ -1,39 +1,53 @@
 import {Space, Input, Button, Row, Col, Table} from "antd";
 import {ColumnsType} from "antd/es/table";
 import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
+import React, {useEffect} from "react";
+import {useAppDispatch, useAppSelector} from "../hooks/reduxHooks";
+import {IUser} from "../types";
+import {fetchUsers} from "../app/userSlice";
 
 const {Search} = Input
 interface DataType {
-    key: string;
+    key: number;
     name: string;
-    age: number;
     address: string;
 }
 
 export const UsersPage: React.FC = () => {
+    const {status, users} =useAppSelector(state=>state.users)
+    const tableData=users.map(item=>({
+        key: item.id,
+        name:item.FIO,
+        address:'test'
+    })) as Array<DataType>
     const onSearch = () => {
 
     }
-    const data: DataType[] = [
-        {
-            key: '1',
-            name: 'John Brown',
-            age: 32,
-            address: 'New York No. 1 Lake Park',
-        },
-        {
-            key: '2',
-            name: 'Jim Green',
-            age: 42,
-            address: 'London No. 1 Lake Park',
-        },
-        {
-            key: '3',
-            name: 'Joe Black',
-            age: 32,
-            address: 'Sydney No. 1 Lake Park',
-        },
-    ];
+    const dispatch=useAppDispatch()
+    useEffect(() => {
+        dispatch(fetchUsers())
+
+    },[])
+    // const data: DataType[] = [
+    //     {
+    //         key: '1',
+    //         name: 'John Brown',
+    //         age: 32,
+    //         address: 'New York No. 1 Lake Park',
+    //     },
+    //     {
+    //         key: '2',
+    //         name: 'Jim Green',
+    //         age: 42,
+    //         address: 'London No. 1 Lake Park',
+    //     },
+    //     {
+    //         key: '3',
+    //         name: 'Joe Black',
+    //         age: 32,
+    //         address: 'Sydney No. 1 Lake Park',
+    //     },
+    // ];
     const columns: ColumnsType<DataType> = [
         {
             title: 'Пользователь',
@@ -78,7 +92,7 @@ export const UsersPage: React.FC = () => {
                 </Row>
             </Col>
             <Col span={24} md={20} lg={16}>
-                <Table columns={columns} dataSource={data} scroll={{ x: 500 }}/>
+                <Table loading={status==='loading'} columns={columns} dataSource={tableData} scroll={{ x: 500 }}/>
             </Col>
 
         </Row>
