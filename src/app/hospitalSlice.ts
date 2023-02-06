@@ -9,7 +9,7 @@ export interface HospitalState {
 }
 
 const initialState: HospitalState = {
-    status: 'idle',
+    status: LoadingStatusesEnum.idle,
     hospitals: []
 };
 
@@ -29,14 +29,14 @@ export const hospitalsSlice=createSlice({
     extraReducers: (builder)=>{
         builder
             .addCase(fetchHospitals.pending, state=>{
-                state.status='loading'
+                state.status=LoadingStatusesEnum.loading
             } )
             .addCase(fetchHospitals.rejected, state => {
-                state.status='failed'
+                state.status=LoadingStatusesEnum.failed
             })
             .addCase(fetchHospitals.fulfilled, (state, action)=>{
                 // debugger
-                state.status='idle'
+                state.status=LoadingStatusesEnum.idle
                 state.hospitals=action.payload.hospitals
             })
     }

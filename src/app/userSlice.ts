@@ -9,7 +9,7 @@ export interface UsersState {
 }
 
 const initialState: UsersState = {
-    status: 'idle',
+    status: LoadingStatusesEnum.idle,
     users: []
 };
 
@@ -28,13 +28,13 @@ export const usersSlice=createSlice({
     extraReducers: (builder)=>{
         builder
             .addCase(fetchUsers.pending, state=>{
-                state.status='loading'
+                state.status=LoadingStatusesEnum.loading
             } )
             .addCase(fetchUsers.rejected, state => {
-                state.status='failed'
+                state.status=LoadingStatusesEnum.failed
             })
             .addCase(fetchUsers.fulfilled, (state, action)=>{
-                state.status='idle'
+                state.status=LoadingStatusesEnum.idle
                 state.users=action.payload.users
             })
 }

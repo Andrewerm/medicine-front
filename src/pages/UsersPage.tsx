@@ -4,7 +4,7 @@ import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import React, {useEffect} from "react";
 import {useAppDispatch, useAppSelector} from "../hooks/reduxHooks";
 import {fetchUsers} from "../app/userSlice";
-import {IUser} from "../types";
+import {IUser, LoadingStatusesEnum} from "../types";
 
 const {Search} = Input
 interface DataType extends IUser{
@@ -87,7 +87,7 @@ export const UsersPage: React.FC = () => {
                 </Row>
             </Col>
             <Col span={24} md={20} lg={16}>
-                <Table loading={status==='loading'}
+                <Table loading={status===LoadingStatusesEnum.loading}
                        rowKey={(record) => record.email}
                        columns={columns}
                        dataSource={tableData} scroll={{ x: 500 }}/>

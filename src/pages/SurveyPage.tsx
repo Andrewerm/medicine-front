@@ -47,7 +47,7 @@ export const SurveyPage:React.FC = () => {
 
     return (
         <>
-            {loadingStatus === 'loading' ? <Spinner/> :switcher()}
+            {loadingStatus === LoadingStatusesEnum.loading ? <Spinner/> :switcher()}
         </>
     )
 }

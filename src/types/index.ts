@@ -3,7 +3,7 @@ export interface ISurvey {
     title: string;
     description: string;
     items: ISurveyItem[];
-    report?:string
+    report?: string
 }
 
 export interface IUser {
@@ -24,18 +24,22 @@ export interface IHospital {
 }
 
 export interface IGetDataSurveys {
-        surveys: Array<ISurvey>
+    surveys: Array<ISurvey>
 }
 
 export interface IGetDataHospitals {
-        hospitals: Array<IHospital>
+    hospitals: Array<IHospital>
 }
 
 export interface IGetDataUsers {
-        users: Array<IUser>
+    users: Array<IUser>
 }
 
-export type LoadingStatusesEnum='idle'|'loading'|'failed'
+export enum LoadingStatusesEnum {
+    idle = 'idle',
+    loading = 'loading',
+    failed = 'failed'
+}
 
 export interface IGetReport {
     data: {
@@ -45,7 +49,7 @@ export interface IGetReport {
 
 export interface IUserProfile {
     email: string,
-    first_name:string,
+    first_name: string,
     hospital_id: string,
     last_name: string,
     middle_name: string,
@@ -62,12 +66,12 @@ export interface ISurveyItem {
 
 export interface IGetReportRequest {
     idSurvey: number,
-    items:Array<{ idQuestion: number, idAnswer?: number }>
+    items: Array<{ idQuestion: number, idAnswer?: number }>
 }
 
-export interface IGetReportResponse{
-    idSurvey:number,
-    textReport:string
+export interface IGetReportResponse {
+    idSurvey: number,
+    textReport: string
 }
 
 export interface Answer {
@@ -82,9 +86,9 @@ export interface ISetAnswer {
 }
 
 export enum ACLEntityEnum {
-    AUTH='auth',
-    HOSPITALS='hospitals',
-    USERS='users',
-    SURVEYS='surveys'
+    AUTH = 'auth',
+    HOSPITALS = 'hospitals',
+    USERS = 'users',
+    SURVEYS = 'surveys'
 
 }

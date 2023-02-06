@@ -1,10 +1,11 @@
 import {useAppDispatch, useAppSelector} from "../hooks/reduxHooks";
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {fetchHospitals} from "../app/hospitalSlice";
-import {IHospital} from "../types";
+import {IHospital, LoadingStatusesEnum} from "../types";
 import {ColumnsType} from "antd/es/table";
-import {Button, Col, Input, Row, Space, Table} from "antd";
+import {Button, Col, Input, Modal, Row, Space, Table} from "antd";
 import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
+import {HospitalModal} from "../components/HospitalModal";
 
 interface DataType extends IHospital {
     key: number
@@ -43,7 +44,7 @@ export const HospitalsPage:React.FC = () => {
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <Button icon={<EditOutlined/>}/>
+                    <Button onClick={editItem} icon={<EditOutlined/>}/>
                     <Button icon={<DeleteOutlined/>}/>
                 </Space>
             ),
@@ -52,24 +53,53 @@ export const HospitalsPage:React.FC = () => {
     const onSearch = () => {
 
     }
-    return <Row justify="center">
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isNewItem, setNewItem] = useState<boolean>(true);
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleOk = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+    const newItem = () => {
+        setNewItem(true)
+        showModal()
+    }
+    const editItem=()=>{
+        setNewItem(false)
+        showModal()
+    }
+    return <>
+        <Row justify="center">
         <Col span={24} md={20} lg={16}>
             <Row justify="space-between" gutter={[10, 10]}>
                 <Col>
                     <Search placeholder="input search text" onSearch={onSearch} style={{width: 200}}/>
                 </Col>
                 <Col>
-                    <Button type="primary">Добавить пользователя</Button>
+                    <Button onClick={newItem} type="primary">Добавить больницу</Button>
                 </Col>
             </Row>
         </Col>
         <Col span={24} md={20} lg={16}>
             <Table
                 rowKey={(record) => record.id}
-                loading={status === 'loading'}
+                loading={status === LoadingStatusesEnum.loading}
                 columns={columns}
                 dataSource={tableData} scroll={{x: 500}}/>
         </Col>
 
     </Row>
+    <Modal title={isNewItem?'Добавление':'Редактирование'}
+           open={isModalOpen}
+           onOk={handleOk}
+           onCancel={handleCancel}>
+        <HospitalModal/>
+    </Modal>
+    </>
 }

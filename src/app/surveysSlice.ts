@@ -17,7 +17,7 @@ export interface SurveysState {
 }
 
 const initialState: SurveysState = {
-    status: 'idle',
+    status: LoadingStatusesEnum.idle,
     surveys: []
 };
 
@@ -67,25 +67,25 @@ export const surveysSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchSurveys.pending, (state) => {
-                state.status ='loading';
+                state.status =LoadingStatusesEnum.loading;
             })
             .addCase(fetchSurveys.fulfilled, (state, action) => {
-                state.status = 'idle';
+                state.status = LoadingStatusesEnum.idle;
                 state.surveys=action.payload.surveys
             })
             .addCase(fetchSurveys.rejected, (state) => {
-                state.status = 'failed';
+                state.status = LoadingStatusesEnum.failed;
             })
             .addCase(getReport.pending, (state) => {
-                state.status = 'loading';
+                state.status = LoadingStatusesEnum.loading;
             })
             .addCase(getReport.fulfilled, (state, action) => {
-                state.status = 'idle';
+                state.status = LoadingStatusesEnum.idle;
                 const survey=state.surveys.find(item=>item.id===action.payload.idSurvey)
                 if (survey) survey.report=action.payload.textReport
             })
             .addCase(getReport.rejected, (state) => {
-                state.status = 'failed';
+                state.status = LoadingStatusesEnum.failed;
             })
     },
 });
