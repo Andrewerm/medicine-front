@@ -3,13 +3,13 @@ import {fetchSurveys, getReport, setAnswer} from "../app/surveysSlice";
 import React, {useEffect, useState} from "react";
 import {SurveyCard} from "../components/SurveyCard";
 import {SurveysList} from "../components/SurveysList";
-import {ISetAnswer} from "../types";
+import {ISetAnswer, LoadingStatusesEnum} from "../types";
 import {SurveyReport} from "../components/SurveyReport";
 import {Spinner} from "../components/Spinner";
 
 export const SurveyPage:React.FC = () => {
-    const loadingStatus = useAppSelector(state => state.surveys.status);
-    const surveys = useAppSelector(state => state.surveys.surveys);
+    // const loadingStatus = useAppSelector(state => state.surveys.status);
+    const {surveys, status:loadingStatus} = useAppSelector(state => state.surveys);
     const [currentSurveyId, setCurrentSurveyId] = useState<number | undefined>();
     const [surveyStep, setSurveyStep] = useState<number>(1);
     const dispatcher=useAppDispatch()

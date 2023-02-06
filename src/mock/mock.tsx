@@ -2,6 +2,6 @@ import axios from 'axios'
 import MockAdapter from 'axios-mock-adapter'
 
 axios.defaults.baseURL = 'http://91.201.53.108'
-const mock = new MockAdapter(axios, { delayResponse: 1000 })
+const mock = new MockAdapter(axios, { delayResponse: 500 })
 
 export default mock

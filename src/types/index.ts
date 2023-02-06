@@ -14,17 +14,28 @@ export interface IUser {
     idHospitals: number
 }
 
+export interface IHospital {
+    address: string;
+    email: string;
+    id: number;
+    name_full: string;
+    name_short: string;
+    phone: string;
+}
+
 export interface IGetDataSurveys {
-    data: {
         surveys: Array<ISurvey>
-    }
+}
+
+export interface IGetDataHospitals {
+        hospitals: Array<IHospital>
 }
 
 export interface IGetDataUsers {
-    data: {
         users: Array<IUser>
-    }
 }
+
+export type LoadingStatusesEnum='idle'|'loading'|'failed'
 
 export interface IGetReport {
     data: {
@@ -33,7 +44,13 @@ export interface IGetReport {
 }
 
 export interface IUserProfile {
-    FIO: string|null
+    email: string,
+    first_name:string,
+    hospital_id: string,
+    last_name: string,
+    middle_name: string,
+    phone: string,
+    position: string
 }
 
 export interface ISurveyItem {
@@ -65,9 +82,9 @@ export interface ISetAnswer {
 }
 
 export enum ACLEntityEnum {
-    AUTH='Auth',
-    HOSPITALS='Hospitals',
-    USERS='Users',
-    SURVEYS='Surveys'
+    AUTH='auth',
+    HOSPITALS='hospitals',
+    USERS='users',
+    SURVEYS='surveys'
 
 }

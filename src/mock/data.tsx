@@ -1,6 +1,5 @@
 import mock from "./mock";
 import {AjaxRoutes} from "../configs/ajaxRoutes";
-import {IGetLogin} from "../pages/LoginPage";
 import {ACLEntityEnum} from "../types";
 
 // mock.onGet(AjaxRoutes.ACL)
@@ -23,10 +22,14 @@ import {ACLEntityEnum} from "../types";
 mock.onGet(AjaxRoutes.ACL)
     .reply(() => {
             const resp = {
-                data: {
-                    userData: {
-                        FIO: 'Иванов Иван Иванович'
-                    }
+                user_data: {
+                    "email": "a.m.vinokurov@gmail.com",
+                    "first_name": "Аркадий",
+                    "hospital_id": "1",
+                    "last_name": "Винокуров",
+                    "middle_name": "Михайлович",
+                    "phone": "79175083798",
+                    "position": "Разработчик"
                 },
                 acl:
                     [
@@ -51,10 +54,14 @@ mock.onGet(AjaxRoutes.ACL)
 mock.onGet(AjaxRoutes.LOGIN)
     .reply(() => {
             const resp = {
-                data: {
-                    userData: {
-                        FIO: 'Иванов Иван Иванович'
-                    }
+                user_data: {
+                    "email": "a.m.vinokurov@gmail.com",
+                    "first_name": "Аркадий",
+                    "hospital_id": "1",
+                    "last_name": "Винокуров",
+                    "middle_name": "Михайлович",
+                    "phone": "79175083798",
+                    "position": "Разработчик"
                 },
                 acl:
                     [
@@ -80,7 +87,6 @@ mock.onGet(AjaxRoutes.LOGIN)
 mock.onGet(AjaxRoutes.GET_SURVEYS)
     .reply(() => {
             const resp = {
-                data: {
                     surveys: [
                         {
                             id: 1,
@@ -334,7 +340,6 @@ mock.onGet(AjaxRoutes.GET_SURVEYS)
                         },
                     ]
                 }
-            }
             return [200, resp]
         }
     )
@@ -370,20 +375,55 @@ mock.onDelete(AjaxRoutes.LOGOUT)
 
 
 mock.onGet(AjaxRoutes.GET_USERS)
-.reply(()=>{
-    const resp={
-        data: {
-            users: [
+    .reply(() => {
+        const resp = {
+                users: [
+                    {
+                        "email": "a.m.vinokurov@gmail.com",
+                        "first_name": "Аркадий",
+                        "hospital_id": "1",
+                        "last_name": "Винокуров",
+                        "middle_name": "Михайлович",
+                        "phone": "79175083798",
+                        "position": "Разработчик"
+                    }
+                ]
+            }
+
+        return [200, resp]
+    })
+
+
+mock.onGet(AjaxRoutes.GET_HOSPITALS)
+    .reply(() => {
+        const resp = {
+            hospitals: [
                 {
-                    id: 1,
-                    FIO: 'Петров Петр Петрович',
-                    phone: '+79033333333',
-                    email: 'andrewerm@ya.ru',
-                    idHospitals: 1
-                }
+                    "address": "617560, край Пермский, р-н Суксунский, рп Суксун, ул Зеленая, д 36",
+                    "email": "skncrb@lpu.perm.ru",
+                    "id": 1,
+                    "name_full": "ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ ПЕРМСКОГО КРАЯ \"СУКСУНСКАЯ ЦЕНТРАЛЬНАЯ РАЙОННАЯ БОЛЬНИЦА\"",
+                    "name_short": "ГБУЗ ПК \"СУКСУНСКАЯ ЦРБ\"",
+                    "phone": "+73427531876"
+                },
+                {
+                    "address": "618120, край Пермский, р-н Осинский, г Оса, ул Мелентьева, д 1",
+                    "email": "osacrb@lpu.perm.ru",
+                    "id": 2,
+                    "name_full": "ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ ЗДРАВООХРАНЕНИЯ ПЕРМСКОГО КРАЯ \"ОСИНСКАЯ ЦЕНТРАЛЬНАЯ РАЙОННАЯ БОЛЬНИЦА\"",
+                    "name_short": "ГБУЗ ПК \"ОСИНСКАЯ ЦРБ\"",
+                    "phone": "+73429144555"
+                },
+                {
+                    "address": "618900, край Пермский, г Лысьва, пр-кт Победы, д 48",
+                    "email": "LSVCAD@LPU.PERM.RU",
+                    "id": 4,
+                    "name_full": "ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ \"ДИАСАН\"",
+                    "name_short": "ООО \"ДИАСАН\"",
+                    "phone": "+79053594921"
+                },
             ]
         }
-    }
 
-    return [200, resp]
-})
+        return [200, resp]
+    })

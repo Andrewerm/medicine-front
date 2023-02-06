@@ -11,14 +11,13 @@ const {Title} = Typography;
 
 export interface IGetLogin {
     acl: ACLInterface,
-    data: {
-        userData: IUserProfile
-    }
+    user_data: IUserProfile
 }
 
 export const LoginPage: React.FC = () => {
     const inputRef = useRef<InputRef>(null);
     const [form] = Form.useForm();
+    form.setFieldsValue({ email: 'a.m.vinokurov@gmail.com', password: '123456789' });
     const ability = useContext(AbilityContext);
     const {setDataUser} = useContext(ProfileDataContext);
     const navigate = useNavigate()
@@ -27,11 +26,14 @@ export const LoginPage: React.FC = () => {
     }, [])
     const onFinish = (values: any) => {
         console.log('Success:', values);
-        axios.get<IGetLogin>(AjaxRoutes.LOGIN)
+        console.log('form',form.getFieldsValue());
+        axios.post<IGetLogin>(AjaxRoutes.LOGIN, form.getFieldsValue(),  { withCredentials: true })
             .then(response => {
                 console.log('response', response);
                 ability.update(response.data.acl)
-                setDataUser(response.data.data.userData)
+                // debugger
+                if (response.data?.user_data)
+                    setDataUser(response.data.user_data)
                 navigate(AjaxRoutes.HOME, {replace: true})
             })
             .catch((err: AxiosError) => {
@@ -55,8 +57,8 @@ export const LoginPage: React.FC = () => {
                 autoComplete="off"
             >
                 <Form.Item
-                    label="Логин"
-                    name="username"
+                    label="Email"
+                    name="email"
                     rules={[{required: true, message: 'Please input your username!'}]}
                 >
                     <Input

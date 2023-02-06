@@ -3,23 +3,18 @@ import {ColumnsType} from "antd/es/table";
 import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import React, {useEffect} from "react";
 import {useAppDispatch, useAppSelector} from "../hooks/reduxHooks";
-import {IUser} from "../types";
 import {fetchUsers} from "../app/userSlice";
+import {IUser} from "../types";
 
 const {Search} = Input
-interface DataType {
+interface DataType extends IUser{
     key: number;
-    name: string;
-    address: string;
 }
 
 export const UsersPage: React.FC = () => {
     const {status, users} =useAppSelector(state=>state.users)
-    const tableData=users.map(item=>({
-        key: item.id,
-        name:item.FIO,
-        address:'test'
-    })) as Array<DataType>
+    // debugger
+    const tableData=users as Array<DataType>
     const onSearch = () => {
 
     }
@@ -92,7 +87,10 @@ export const UsersPage: React.FC = () => {
                 </Row>
             </Col>
             <Col span={24} md={20} lg={16}>
-                <Table loading={status==='loading'} columns={columns} dataSource={tableData} scroll={{ x: 500 }}/>
+                <Table loading={status==='loading'}
+                       rowKey={(record) => record.email}
+                       columns={columns}
+                       dataSource={tableData} scroll={{ x: 500 }}/>
             </Col>
 
         </Row>

@@ -1,15 +1,15 @@
-import {IGetDataUsers, IUser} from "../types";
+import {IGetDataUsers, IUser, LoadingStatusesEnum} from "../types";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axios from "axios";
 import {AjaxRoutes} from "../configs/ajaxRoutes";
 
 export interface UsersState {
     users: Array<IUser>
-    status: 'idle' | 'loading' | 'failed';
+    status: LoadingStatusesEnum
 }
 
 const initialState: UsersState = {
-    status: "idle",
+    status: 'idle',
     users: []
 };
 
@@ -35,7 +35,7 @@ export const usersSlice=createSlice({
             })
             .addCase(fetchUsers.fulfilled, (state, action)=>{
                 state.status='idle'
-                state.users=action.payload.data.users
+                state.users=action.payload.users
             })
 }
 

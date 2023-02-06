@@ -13,15 +13,19 @@ const {Title} = Typography
 export const ProfileBar: React.FC = () => {
     const navigate=useNavigate()
     const ability = useContext(AbilityContext);
-    const {dataUser} = useContext(ProfileDataContext);
+    const {user_data} = useContext(ProfileDataContext);
+    console.log('ProfileBar dataUser',user_data);
     const logout:MouseEventHandler<HTMLAnchorElement|HTMLButtonElement>=()=>{
-        axios.delete(AjaxRoutes.LOGOUT).then(response =>{
+        axios.post(AjaxRoutes.LOGOUT).then(response =>{
             ability.update(response.data.acl)
             navigate(AjaxRoutes.LOGIN, {replace: true})
         } )
     }
+    let FIO=''
+    if (user_data)
+         FIO=user_data.last_name+' '+user_data.first_name.slice(0,1)+'. '+user_data.middle_name.slice(0,1)+'.'
     return <Space>
-        <Title level={5}>{dataUser.FIO}</Title>
+        <Title level={5}>{FIO}</Title>
         <Button onClick={logout} icon={<LogoutOutlined/>}/>
     </Space>
 }

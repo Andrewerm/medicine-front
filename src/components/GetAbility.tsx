@@ -18,7 +18,7 @@ export const GetAbility:React.FC<GotAbilityPropsInterface>=({children} )=>{
         axios.get<IGetLogin>(AjaxRoutes.ACL)
             .then(response => {
                 ability.update(response.data.acl)
-                setDataUser(response.data.data.userData)
+                if (response.data) setDataUser(response.data.user_data)
                 setGotAbility(true)
             })
             .catch((err: AxiosError) => {

@@ -1,15 +1,23 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import axios from "axios";
 import {AjaxRoutes} from "../configs/ajaxRoutes";
-import {IGetDataSurveys, IGetReport, IGetReportRequest, IGetReportResponse, ISetAnswer, ISurvey} from "../types";
+import {
+    IGetDataSurveys,
+    IGetReport,
+    IGetReportRequest,
+    IGetReportResponse,
+    ISetAnswer,
+    ISurvey,
+    LoadingStatusesEnum
+} from "../types";
 
 export interface SurveysState {
     surveys: Array<ISurvey>
-    status: 'idle' | 'loading' | 'failed';
+    status: LoadingStatusesEnum;
 }
 
 const initialState: SurveysState = {
-    status: "idle",
+    status: 'idle',
     surveys: []
 };
 
@@ -59,11 +67,11 @@ export const surveysSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchSurveys.pending, (state) => {
-                state.status = 'loading';
+                state.status ='loading';
             })
             .addCase(fetchSurveys.fulfilled, (state, action) => {
                 state.status = 'idle';
-                state.surveys=action.payload.data.surveys
+                state.surveys=action.payload.surveys
             })
             .addCase(fetchSurveys.rejected, (state) => {
                 state.status = 'failed';

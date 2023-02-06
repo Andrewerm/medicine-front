@@ -6,21 +6,21 @@ interface IProfileDataProps {
 }
 
 interface IProfileDataContext {
-    dataUser: IUserProfile,
+    user_data?: IUserProfile,
     setDataUser: any
 }
 
 const initialUserProfileDataContext:IProfileDataContext={
-    dataUser: { FIO: null},
+    user_data: undefined,
     setDataUser: undefined
 }
 
 export const ProfileDataContext=React.createContext<IProfileDataContext>(initialUserProfileDataContext)
 
 export const ProfileData:React.FC<IProfileDataProps>=({children})=>{
-    const [dataUser, setDataUser] = useState<IUserProfile>(initialUserProfileDataContext.dataUser);
+    const [user_data, setDataUser] = useState<IUserProfile|undefined>(initialUserProfileDataContext.user_data);
     return (
-        <ProfileDataContext.Provider value={{dataUser, setDataUser}}>
+        <ProfileDataContext.Provider value={{user_data, setDataUser}}>
             {children}
         </ProfileDataContext.Provider>
     )
