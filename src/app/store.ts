@@ -7,7 +7,7 @@ export const store = configureStore({
     reducer: {
         surveys: surveysSlice,
         users: usersSlice,
-        // hospitals: hospitalSlice
+        hospitals: hospitalSlice
     },
 });
 
