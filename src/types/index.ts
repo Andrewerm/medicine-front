@@ -14,13 +14,16 @@ export interface IUser {
     idHospitals: number
 }
 
-export interface IHospital {
+export interface IHospitalWithoutID {
     address: string;
     email: string;
-    id: number;
     name_full: string;
     name_short: string;
     phone: string;
+}
+
+export interface IHospital extends IHospitalWithoutID{
+    id: number;
 }
 
 export interface IGetDataSurveys {
@@ -46,6 +49,13 @@ export interface IGetReport {
         textReport: string
     }
 }
+export interface IModelPost {
+    data:{
+        id: number
+    }
+}
+
+
 
 export interface IUserProfile {
     email: string,

@@ -5,6 +5,7 @@ import React, {useEffect} from "react";
 import {useAppDispatch, useAppSelector} from "../hooks/reduxHooks";
 import {fetchUsers} from "../app/userSlice";
 import {IUser, LoadingStatusesEnum} from "../types";
+import {hospitalsModel} from "../models/hospitals";
 
 const {Search} = Input
 interface DataType extends IUser{
@@ -22,48 +23,9 @@ export const UsersPage: React.FC = () => {
     useEffect(() => {
         dispatch(fetchUsers())
 
-    },[])
-    // const data: DataType[] = [
-    //     {
-    //         key: '1',
-    //         name: 'John Brown',
-    //         age: 32,
-    //         address: 'New York No. 1 Lake Park',
-    //     },
-    //     {
-    //         key: '2',
-    //         name: 'Jim Green',
-    //         age: 42,
-    //         address: 'London No. 1 Lake Park',
-    //     },
-    //     {
-    //         key: '3',
-    //         name: 'Joe Black',
-    //         age: 32,
-    //         address: 'Sydney No. 1 Lake Park',
-    //     },
-    // ];
+    },[dispatch])
     const columns: ColumnsType<DataType> = [
-        {
-            title: 'Пользователь',
-            dataIndex: 'name',
-            key: 'name',
-        },
-        {
-            title: 'Контактные данные',
-            dataIndex: 'contacts',
-            key: 'contacts',
-        },
-        {
-            title: 'Больница',
-            dataIndex: 'hospital',
-            key: 'hospital',
-        },
-        {
-            title: 'Адрес Больницы',
-            dataIndex: 'address',
-            key: 'address',
-        },
+        ...hospitalsModel.map(item=>({title:item.label, dataIndex: item.field})),
         {
             key: 'action',
             render: (_, record) => (
@@ -90,7 +52,8 @@ export const UsersPage: React.FC = () => {
                 <Table loading={status===LoadingStatusesEnum.loading}
                        rowKey={(record) => record.email}
                        columns={columns}
-                       dataSource={tableData} scroll={{ x: 500 }}/>
+                       dataSource={tableData}
+                       scroll={{ x: 500 }}/>
             </Col>
 
         </Row>

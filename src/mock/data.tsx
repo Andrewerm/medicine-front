@@ -427,3 +427,29 @@ mock.onGet(AjaxRoutes.GET_HOSPITALS)
 
         return [200, resp]
     })
+
+mock.onPut(AjaxRoutes.POST_USER)
+.reply(()=> {
+        const id = Math.round(Math.random() * 1000)
+        return [200, {data:{id}}]
+    }
+)
+
+mock.onPut(AjaxRoutes.POST_HOSPITAL)
+    .reply(()=> {
+            const id = Math.round(Math.random() * 1000)
+            return [200, {data:{id}}]
+        }
+    )
+const hospitalsUri = AjaxRoutes.PATCH_HOSPITAL;
+const url = new RegExp(`${hospitalsUri}/*`);
+mock.onPatch(url)
+    .reply(()=> {
+            return [204]
+        }
+    )
+mock.onPatch(AjaxRoutes.PATCH_USER)
+    .reply(()=> {
+            return [204]
+        }
+    )

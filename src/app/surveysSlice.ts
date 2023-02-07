@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import {AjaxRoutes} from "../configs/ajaxRoutes";
 import {
     IGetDataSurveys,
@@ -26,11 +26,23 @@ const initialState: SurveysState = {
 // will call the thunk with the `dispatch` function as the first argument. Async
 // code can then be executed and other actions can be dispatched. Thunks are
 // typically used to make async requests.
-export const fetchSurveys = createAsyncThunk<IGetDataSurveys>(
+export const fetchSurveys = createAsyncThunk<Array<ISurvey>, undefined,  {rejectValue:string, state:{surveys: SurveysState}}>(
     'surveys/fetchSurveys',
-    async ( ) => {
-        const response = await axios.get<IGetDataSurveys>(AjaxRoutes.GET_SURVEYS)
-        return response.data;
+    async (_, {getState, rejectWithValue} ) => {
+        const state=getState()
+        if (state.surveys.surveys.length) return state.surveys.surveys
+        else {
+            try {
+                const response = await axios.get<IGetDataSurveys>(AjaxRoutes.GET_SURVEYS)
+                console.log('запрос на сервер');
+                return response.data.surveys;
+            }
+            catch (e:unknown) {
+                const error=e as AxiosError
+                return rejectWithValue(error.message)
+            }
+        }
+
     }
 );
 
@@ -71,7 +83,7 @@ export const surveysSlice = createSlice({
             })
             .addCase(fetchSurveys.fulfilled, (state, action) => {
                 state.status = LoadingStatusesEnum.idle;
-                state.surveys=action.payload.surveys
+                state.surveys=action.payload
             })
             .addCase(fetchSurveys.rejected, (state) => {
                 state.status = LoadingStatusesEnum.failed;

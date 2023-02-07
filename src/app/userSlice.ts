@@ -1,6 +1,6 @@
 import {IGetDataUsers, IUser, LoadingStatusesEnum} from "../types";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import axios from "axios";
+import axios, {AxiosError} from "axios";
 import {AjaxRoutes} from "../configs/ajaxRoutes";
 
 export interface UsersState {
@@ -13,11 +13,25 @@ const initialState: UsersState = {
     users: []
 };
 
-export const fetchUsers = createAsyncThunk<IGetDataUsers>(
+export const fetchUsers = createAsyncThunk<Array<IUser>, undefined, {rejectValue:string, state:{users: UsersState}}>(
     'users/fetchUsers',
-    async ( ) => {
-        const response = await axios.get<IGetDataUsers>(AjaxRoutes.GET_USERS)
-        return response.data;
+    async (_, {getState, rejectWithValue} ) => {
+        const state=getState()
+        if (getState().users.users.length) {
+            return state.users.users
+        }
+        else {
+            try {
+                const response = await axios.get<IGetDataUsers>(AjaxRoutes.GET_USERS)
+                console.log('запрос на сервер');
+                return response.data.users;
+            }
+            catch (e: unknown) {
+                const error=e as AxiosError
+                return rejectWithValue(error.message)
+            }
+        }
+
     }
 );
 
@@ -35,7 +49,7 @@ export const usersSlice=createSlice({
             })
             .addCase(fetchUsers.fulfilled, (state, action)=>{
                 state.status=LoadingStatusesEnum.idle
-                state.users=action.payload.users
+                state.users=action.payload
             })
 }
 
