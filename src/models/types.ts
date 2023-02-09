@@ -1,6 +1,7 @@
 export interface IModel {
     field: string,
     label: string,
-    hiddenInTable?: boolean
+    hiddenInTable?: boolean,
+    filterable?: boolean,
     rules: Array<any>
 }

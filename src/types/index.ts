@@ -20,6 +20,7 @@ export interface IHospitalWithoutID {
     name_full: string;
     name_short: string;
     phone: string;
+    [key:string]:string|number
 }
 
 export interface IHospital extends IHospitalWithoutID{
@@ -41,7 +42,8 @@ export interface IGetDataUsers {
 export enum LoadingStatusesEnum {
     idle = 'idle',
     loading = 'loading',
-    failed = 'failed'
+    failed = 'failed',
+    done='done'
 }
 
 export interface IGetReport {
@@ -50,9 +52,7 @@ export interface IGetReport {
     }
 }
 export interface IModelPost {
-    data:{
-        id: number
-    }
+        hospital_id: number
 }
 
 

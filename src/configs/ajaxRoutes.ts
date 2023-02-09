@@ -10,8 +10,9 @@ export enum AjaxRoutes {
     GET_USERS='/guides/users',
     POST_USER='/guides/users',
     PATCH_USER='/guides/users/',
-    POST_HOSPITAL='/guides/hospital',
-    PATCH_HOSPITAL='/guides/hospital/',
-    GET_HOSPITALS='/guides/hospitals'
+    POST_HOSPITAL='/guides/hospitals',
+    PATCH_HOSPITAL='/guides/hospitals/',
+    GET_HOSPITALS='/guides/hospitals',
+    DELETE_HOSPITAL='/guides/hospitals/'
 
 }

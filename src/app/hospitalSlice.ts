@@ -7,12 +7,14 @@ export interface HospitalState {
     hospitals: Array<IHospital>
     status: LoadingStatusesEnum;
     edit_status: LoadingStatusesEnum;
-    error_message?:string
+    error_message?:string,
+    delete_status: LoadingStatusesEnum;
 }
 
 const initialState: HospitalState = {
     status: LoadingStatusesEnum.idle,
     edit_status: LoadingStatusesEnum.idle,
+    delete_status: LoadingStatusesEnum.idle,
     hospitals: []
 };
 
@@ -40,11 +42,10 @@ export const fetchHospitals = createAsyncThunk<Array<IHospital>, undefined,{reje
 export const createHospital = createAsyncThunk<IHospital, IHospitalWithoutID, { rejectValue: string }>(
     'hospitals/createHospital',
     async (hospital, {rejectWithValue}) => {
-
         try {
             const response = await axios.put<IModelPost>(AjaxRoutes.POST_HOSPITAL, hospital, { withCredentials: true })
             // debugger
-            return {id: response.data.data.id, ...hospital};
+            return {id: response.data.hospital_id, ...hospital};
         } catch (e: unknown) {
             const error = e as AxiosError
             return rejectWithValue(error.message)
@@ -66,10 +67,32 @@ export const updateHospital = createAsyncThunk<IHospital, IHospital, { rejectVal
     }
 )
 
+export const deleteHospital=createAsyncThunk<number,number, { rejectValue: string,  }>(
+    'hospitals/deleteHospital',
+    async (idHospital, {rejectWithValue})=>{
+        try {
+            await axios.delete(AjaxRoutes.DELETE_HOSPITAL+idHospital, { withCredentials: true })
+            return idHospital
+            // debugger
+        } catch (e: unknown) {
+            const error = e as AxiosError<{message: string}>
+            if (error.response?.status===422 &&  error.response?.data) return rejectWithValue(error.response.data.message)
+             else return rejectWithValue(error.message)
+        }
+    }
+)
+
 export const hospitalsSlice = createSlice({
     name: 'hospitals',
     initialState,
-    reducers: {},
+    reducers: {
+        setStatusToIdle(state){
+            state.edit_status=LoadingStatusesEnum.idle
+        },
+        setDeleteStatusToIdle(state){
+            state.delete_status=LoadingStatusesEnum.idle
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchHospitals.pending, state => {
@@ -90,11 +113,9 @@ export const hospitalsSlice = createSlice({
                 state.edit_status = LoadingStatusesEnum.failed
             })
             .addCase(createHospital.fulfilled, (state, action) => {
-                // debugger
-
                 const temp = action.payload
-                state.hospitals.push(temp)
-                state.edit_status = LoadingStatusesEnum.idle
+                state.hospitals.unshift(temp)
+                state.edit_status = LoadingStatusesEnum.done
             })
             .addCase(updateHospital.pending, state => {
                 state.edit_status = LoadingStatusesEnum.loading
@@ -102,17 +123,25 @@ export const hospitalsSlice = createSlice({
             .addCase(updateHospital.rejected, (state,action) => {
                 state.edit_status = LoadingStatusesEnum.failed
                 state.error_message=action.payload
-
             })
             .addCase(updateHospital.fulfilled, (state, action) => {
-                // debugger
-
                 const hospitalID=state.hospitals.findIndex(item=>item.id===action.payload.id)
                 state.hospitals[hospitalID]=action.payload
-                state.edit_status = LoadingStatusesEnum.idle
+                state.edit_status = LoadingStatusesEnum.done
             })
+            .addCase(deleteHospital.pending, state => {
+                state.delete_status = LoadingStatusesEnum.loading
+            })
+            .addCase(deleteHospital.rejected, (state,action) => {
+                state.delete_status = LoadingStatusesEnum.failed
+                state.error_message=action.payload
+            })
+            .addCase(deleteHospital.fulfilled, (state, action) => {
+                state.hospitals=state.hospitals.filter(item=>item.id!==action.payload)
+                state.delete_status = LoadingStatusesEnum.done
+                })
     }
 
 })
-
+export const {setStatusToIdle, setDeleteStatusToIdle} = hospitalsSlice.actions;
 export default hospitalsSlice.reducer

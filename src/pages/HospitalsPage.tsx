@@ -1,9 +1,16 @@
 import {useAppDispatch, useAppSelector} from "../hooks/reduxHooks";
 import React, {useEffect, useState} from "react";
-import {createHospital, fetchHospitals, updateHospital} from "../app/hospitalSlice";
+import {
+    createHospital,
+    deleteHospital,
+    fetchHospitals,
+    setDeleteStatusToIdle,
+    setStatusToIdle,
+    updateHospital
+} from "../app/hospitalSlice";
 import {IHospital, IHospitalWithoutID, LoadingStatusesEnum} from "../types";
 import {ColumnsType} from "antd/es/table";
-import {App, Button, Col, Input, Modal, notification, Row, Space, Table} from "antd";
+import {App, Button, Col, Input, Modal, Popconfirm, Row, Space, Table} from "antd";
 import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import {EditModal} from "../components/EditModal";
 import {hospitalsModel} from "../models/hospitals";
@@ -15,20 +22,50 @@ interface DataType extends IHospital {
 const {Search} = Input
 
 export const HospitalsPage: React.FC = () => {
-
-    const {status, hospitals, edit_status, error_message} = useAppSelector(state => state.hospitals)
-    const {message, notification, modal} = App.useApp();
-    if (edit_status === LoadingStatusesEnum.failed) {
-        console.log('нотификация', error_message);
-        notification.error({description: 'Ошибка', message: error_message})
-    }
-    console.log('status', status);
-    console.log('edit_status', edit_status);
-    const tableData = hospitals as Array<DataType>
     const dispatch = useAppDispatch()
+    const {status, hospitals, edit_status, error_message, delete_status} = useAppSelector(state => state.hospitals)
+    const {notification} = App.useApp();
+    const [isModalOpen, setIsModalOpen] = useState(false); // окно редактирования открыто
+    const [searchString, setSearchString] = useState(''); // строка поиска
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+    useEffect(() => {
+        if (edit_status === LoadingStatusesEnum.done) {
+            notification.success({description: 'Успешно', message: 'Обновление данных'})
+            dispatch(setStatusToIdle())
+            closeModal()
+        }
+        if (edit_status === LoadingStatusesEnum.failed || delete_status=== LoadingStatusesEnum.failed) {
+            notification.error({
+                description: 'Ошибка',
+                message: error_message
+            })
+            dispatch(setDeleteStatusToIdle())
+        }
+
+    }, [edit_status,delete_status])
+    useEffect(() => {
+        if (delete_status === LoadingStatusesEnum.done) {
+            notification.warning({description: 'Успешно', message: 'Удаление больницы'})
+            dispatch(setDeleteStatusToIdle())
+        }
+    }, [delete_status])
+
+
+    const tableData = (hospitals as Array<DataType>)
+        .filter((item: IHospital) => {
+            if (searchString === '') return true
+            else {
+                const fieldsForFilter = hospitalsModel.filter(item2 => item2.filterable).map(item4 => item4.field)
+                const unionString = fieldsForFilter.map((item3) => item[item3].toString().toLowerCase()).join(' ')
+                return unionString.includes(searchString.trim().toLowerCase())
+            }
+        })
     useEffect(() => {
         dispatch(fetchHospitals())
     }, [dispatch])
+    // формирование колонок таблицы
     const columns: ColumnsType<DataType> = [
         ...hospitalsModel
             .filter(item => !item.hiddenInTable)
@@ -38,31 +75,40 @@ export const HospitalsPage: React.FC = () => {
             render: (_, record) => (
                 <Space size="middle">
                     <Button onClick={() => editItem(record.id)} icon={<EditOutlined/>}/>
-                    <Button icon={<DeleteOutlined/>}/>
+                    <Popconfirm
+                        title="Удаление"
+                        description="Вы уверены, что хотите удалить больницу?"
+                        onConfirm={() => confirmDelete(record.id)}
+                        okText="Да"
+                        cancelText="Нет"
+                    >
+                        <Button icon={<DeleteOutlined/>}/>
+                    </Popconfirm>
                 </Space>
             ),
         },
     ];
-    const onSearch = () => {
-
+    const confirmDelete = (idHospital: number) => {
+        dispatch(deleteHospital(idHospital))
     }
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isNewItem, setNewItem] = useState<boolean>(true);
-    const [initialValues, setInitialValues] = useState<IHospital | undefined>(undefined);
+
+    const [editedID, setEditedID] = useState<number | null>(null); // текущий ID, который редактируется
+    const [isNewItem, setNewItem] = useState<boolean>(true); // признак новой записи
+    const [initialValues, setInitialValues] = useState<IHospital | undefined>(undefined); // начальные данные для редактирования
     const showModal = () => {
         setIsModalOpen(true);
     };
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
+
     const onCancel = () => {
         closeModal()
     }
     const onFinish = (values: IHospital | IHospitalWithoutID) => {
-        console.log('Success:', values);
         if (isNewItem) dispatch(createHospital(values as IHospitalWithoutID))
-                else dispatch(updateHospital(values as IHospital))
-        if (edit_status === LoadingStatusesEnum.idle) closeModal()
+        else if (editedID) {
+            const val = values as IHospital
+            val.id = editedID // добавляем ID
+            dispatch(updateHospital(val))
+        }
     };
 
     const onFinishFailed = (errorInfo: any) => {
@@ -77,14 +123,15 @@ export const HospitalsPage: React.FC = () => {
         setNewItem(false)
         const row = hospitals.find(item => item.id === id)
         setInitialValues(row)
+        setEditedID(id)
         showModal()
     }
     return <>
-        <Row justify="center">
+        <Row justify="center" gutter={[10, 10]}>
             <Col span={24} md={20} lg={16}>
                 <Row justify="space-between" gutter={[10, 10]}>
                     <Col>
-                        <Search placeholder="input search text" onSearch={onSearch} style={{width: 200}}/>
+                        <Search allowClear={true} placeholder="Поиск по таблице" onSearch={setSearchString} style={{width: 200}}/>
                     </Col>
                     <Col>
                         <Button onClick={newItem} type="primary">Добавить больницу</Button>
@@ -104,6 +151,7 @@ export const HospitalsPage: React.FC = () => {
                open={isModalOpen}
                footer={null}
                onCancel={onCancel}
+               destroyOnClose={true}
         >
             <EditModal model={hospitalsModel}
                        editStatus={edit_status}

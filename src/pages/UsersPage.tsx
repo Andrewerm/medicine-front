@@ -5,7 +5,7 @@ import React, {useEffect} from "react";
 import {useAppDispatch, useAppSelector} from "../hooks/reduxHooks";
 import {fetchUsers} from "../app/userSlice";
 import {IUser, LoadingStatusesEnum} from "../types";
-import {hospitalsModel} from "../models/hospitals";
+import {usersModel} from "../models/users";
 
 const {Search} = Input
 interface DataType extends IUser{
@@ -29,7 +29,7 @@ export const UsersPage: React.FC = () => {
         notification.error({description: 'Ошибка', message: error_message})
     }
     const columns: ColumnsType<DataType> = [
-        ...hospitalsModel.map(item=>({title:item.label, dataIndex: item.field})),
+        ...usersModel.map(item=>({title:item.label, dataIndex: item.field})),
         {
             key: 'action',
             render: (_, record) => (
