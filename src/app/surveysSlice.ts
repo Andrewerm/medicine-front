@@ -14,6 +14,7 @@ import {
 export interface SurveysState {
     surveys: Array<ISurvey>
     status: LoadingStatusesEnum;
+    error_message?:string
 }
 
 const initialState: SurveysState = {
@@ -33,7 +34,7 @@ export const fetchSurveys = createAsyncThunk<Array<ISurvey>, undefined,  {reject
         if (state.surveys.surveys.length) return state.surveys.surveys
         else {
             try {
-                const response = await axios.get<IGetDataSurveys>(AjaxRoutes.GET_SURVEYS)
+                const response = await axios.get<IGetDataSurveys>(AjaxRoutes.GET_SURVEYS, { withCredentials: true })
                 console.log('запрос на сервер');
                 return response.data.surveys;
             }
@@ -46,14 +47,21 @@ export const fetchSurveys = createAsyncThunk<Array<ISurvey>, undefined,  {reject
     }
 );
 
-export const getReport = createAsyncThunk<IGetReportResponse,IGetReportRequest>(
+export const getReport = createAsyncThunk<IGetReportResponse,IGetReportRequest, {rejectValue:string}>(
     'surveys/getReport',
-    async (arg) => {
-        const response = await axios.post<IGetReport>(AjaxRoutes.GET_REPORT, arg)
-        return {
-            idSurvey:arg.idSurvey,
-            textReport:response.data.data.textReport
+    async (arg, {rejectWithValue}) => {
+        try {
+            const response = await axios.put(AjaxRoutes.GET_REPORT, arg, { withCredentials: true })
+            return {
+                idSurvey:arg.id,
+                textReport:response.data
+            }
         }
+        catch (e:unknown) {
+            const error=e as AxiosError
+            return rejectWithValue(error.message)
+        }
+
     }
 );
 
@@ -68,7 +76,7 @@ export const surveysSlice = createSlice({
         setAnswer(state, {payload}: PayloadAction<ISetAnswer>) {
             const {idSurvey,idQuestion, idAnswer}=payload
             const survey=state.surveys?.find(item=>item.id===idSurvey)
-            const question=survey?.items?.find(item2=>item2.id===idQuestion)
+            const question=survey?.questions?.find(item2=>item2.id===idQuestion)
             if (question) question.selectedAnswer=idAnswer
         },
 
@@ -85,8 +93,9 @@ export const surveysSlice = createSlice({
                 state.status = LoadingStatusesEnum.idle;
                 state.surveys=action.payload
             })
-            .addCase(fetchSurveys.rejected, (state) => {
+            .addCase(fetchSurveys.rejected, (state,action ) => {
                 state.status = LoadingStatusesEnum.failed;
+                state.error_message=action.payload
             })
             .addCase(getReport.pending, (state) => {
                 state.status = LoadingStatusesEnum.loading;
@@ -96,8 +105,9 @@ export const surveysSlice = createSlice({
                 const survey=state.surveys.find(item=>item.id===action.payload.idSurvey)
                 if (survey) survey.report=action.payload.textReport
             })
-            .addCase(getReport.rejected, (state) => {
+            .addCase(getReport.rejected, (state,action) => {
                 state.status = LoadingStatusesEnum.failed;
+                state.error_message=action.payload
             })
     },
 });

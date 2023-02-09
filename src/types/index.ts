@@ -2,7 +2,7 @@ export interface ISurvey {
     id: number;
     title: string;
     description: string;
-    items: ISurveyItem[];
+    questions: ISurveyItem[];
     report?: string
 }
 
@@ -35,7 +35,7 @@ export interface IGetDataHospitals {
 }
 
 export interface IGetDataUsers {
-    users: Array<IUser>
+    items: Array<IUser>
 }
 
 export enum LoadingStatusesEnum {
@@ -70,13 +70,13 @@ export interface IUserProfile {
 export interface ISurveyItem {
     id: number;
     question: string;
-    answers: Answer[];
+    items: Answer[];
     selectedAnswer?: number,
 }
 
 export interface IGetReportRequest {
-    idSurvey: number,
-    items: Array<{ idQuestion: number, idAnswer?: number }>
+    id: number,
+    answers: Array<{ id: number, variant?: number }>
 }
 
 export interface IGetReportResponse {

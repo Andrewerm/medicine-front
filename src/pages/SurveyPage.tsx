@@ -6,10 +6,11 @@ import {SurveysList} from "../components/SurveysList";
 import {ISetAnswer, LoadingStatusesEnum} from "../types";
 import {SurveyReport} from "../components/SurveyReport";
 import {Spinner} from "../components/Spinner";
+import { notification } from "antd";
 
 export const SurveyPage:React.FC = () => {
     // const loadingStatus = useAppSelector(state => state.surveys.status);
-    const {surveys, status:loadingStatus} = useAppSelector(state => state.surveys);
+    const {surveys, status:loadingStatus, error_message} = useAppSelector(state => state.surveys);
     const [currentSurveyId, setCurrentSurveyId] = useState<number | undefined>();
     const [surveyStep, setSurveyStep] = useState<number>(1);
     const dispatcher=useAppDispatch()
@@ -19,14 +20,19 @@ export const SurveyPage:React.FC = () => {
         console.log('выбран вопрос id',id);
         setSurveyStep(2)
     }
+
+    if (loadingStatus === LoadingStatusesEnum.failed) {
+        console.log('нотификация', error_message);
+        notification.error({description: 'Ошибка', message: error_message})
+    }
     const onSurveyExit: React.MouseEventHandler = (): void => {
         setSurveyStep(1)
     }
-    const forRequest = surveys.find(item1=>item1.id===currentSurveyId)?.items.map(item => ({idQuestion: item.id, idAnswer: item.selectedAnswer}))
+    const forRequest = surveys.find(item1=>item1.id===currentSurveyId)?.questions.map(item => ({id: item.id, variant: item.selectedAnswer}))
     const onSurveyReport = () => {
         if (forRequest && currentSurveyId) dispatcher(getReport({
-            idSurvey: currentSurveyId,
-            items: forRequest
+            id: currentSurveyId,
+            answers: forRequest
         }))
         setSurveyStep(3)
     }

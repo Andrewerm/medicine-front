@@ -1,11 +1,14 @@
 import {Outlet, useLocation, useNavigate} from "react-router-dom";
 import {Footer as MyFooter} from "../components/Footer";
 import {Col, Layout, Menu, Row, Space, Typography} from 'antd';
-import type { MenuProps } from 'antd';
+import type {MenuProps} from 'antd';
 import {HeartInHand} from "../components/images/HeartInHand";
 import {TopPanel} from "../components/TopPanel";
 import React, {useEffect, useState} from "react";
 import {ProfileBar} from "../components/ProfileBar";
+
+import {ACLEntityEnum} from "../types";
+import {Can} from "../hooks/Can";
 
 
 const {Title} = Typography
@@ -41,10 +44,10 @@ export const MainLayout: React.FC = () => {
             key: 'hospitals',
         },
     ]
-    const navigate=useNavigate()
+    const navigate = useNavigate()
     const [selectedKey, setSelectedKey] = useState<string[]>()
-    const location=useLocation()
-    const menuSelect=(e:any)=>{
+    const location = useLocation()
+    const menuSelect = (e: any) => {
         navigate(e.key)
     }
     useEffect(() => {
@@ -59,12 +62,15 @@ export const MainLayout: React.FC = () => {
                     <Col span={20} sm={8}>
                         <Space align="center">
                             <HeartInHand/>
-                            <Title style={{margin:0}} level={3}>Медкабинет</Title>
+                            <Title style={{margin: 0}} level={3}>Медкабинет</Title>
                         </Space>
                     </Col>
-                    <Col span={4} sm={8}>
-                        {selectedKey && <Menu defaultSelectedKeys={selectedKey} mode="horizontal" items={items} onSelect={menuSelect}/>}
-                    </Col>
+                    <Can I="update" a={ACLEntityEnum.HOSPITALS}>
+                        <Col span={4} sm={8}>
+                            {selectedKey && <Menu defaultSelectedKeys={selectedKey} mode="horizontal" items={items}
+                                                  onSelect={menuSelect}/>}
+                        </Col>
+                    </Can>
                     <Col flex="auto" span={24} sm={8}>
                         <ProfileBar/>
                     </Col>

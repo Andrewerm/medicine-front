@@ -14,7 +14,7 @@ interface ISurveyCardProps {
 export const SurveyCard:React.FC<ISurveyCardProps> = ({onExit, surveyId, selectingAnswer, onReport}) => {
     const topPanelContext = useContext(TopPanelContext);
     const survey = useAppSelector(state => state.surveys.surveys.find(item=>item.id===surveyId));
-    const notFullFilled=():boolean|undefined=>survey?.items.some(item=>!item.selectedAnswer)
+    const notFullFilled=():boolean|undefined=>survey?.questions.some(item=>!item.selectedAnswer)
     useEffect(() => {
         const buttons = [<Button onClick={onExit}>ВЕРНУТЬСЯ К СПИСКУ ВОПРОСОВ</Button>]
         if (topPanelContext) topPanelContext.setButtons(buttons)
@@ -30,14 +30,14 @@ export const SurveyCard:React.FC<ISurveyCardProps> = ({onExit, surveyId, selecti
                         Выберите подходящий вариант
                     </Card>
                 </Col>
-                {survey.items.map(question =>
+                {survey.questions.map(question =>
                     <Col span={24} sm={20} md={18} lg={16} xxl={13} key={question.id}>
                         <Card title={question.question}>
                             <Radio.Group onChange={(e)=>{
                                 selectingAnswer({idSurvey: survey.id, idQuestion: question.id, idAnswer: e.target.value})
                             }} value={question.selectedAnswer}>
                                 <Space direction="vertical">
-                                    {question.answers.map(answer => <Radio key={answer.id}
+                                    {question.items.map(answer => <Radio key={answer.id}
                                                                            value={answer.id}>{answer.variant}</Radio>)}
                                 </Space>
                             </Radio.Group>

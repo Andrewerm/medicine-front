@@ -3,4 +3,4 @@ import './data'
 
 
 mock.onAny().passThrough()
-// mock.restore()
+mock.restore()

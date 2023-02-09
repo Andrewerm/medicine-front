@@ -15,7 +15,7 @@ export const GetAbility:React.FC<GotAbilityPropsInterface>=({children} )=>{
     const [gotAbility, setGotAbility] = useState(false);
     const {setDataUser} = useContext(ProfileDataContext);
     useEffect(() => {
-        axios.get<IGetLogin>(AjaxRoutes.ACL)
+        axios.get<IGetLogin>(AjaxRoutes.ACL,{ withCredentials: true })
             .then(response => {
                 ability.update(response.data.acl)
                 if (response.data) setDataUser(response.data.user_data)

@@ -4,7 +4,7 @@ import {LogoutOutlined} from "@ant-design/icons";
 import axios from "axios";
 import {AjaxRoutes} from "../configs/ajaxRoutes";
 import {useNavigate} from "react-router-dom";
-import {AbilityContext} from "../hooks/Can";
+import {AbilityContext, initialACL} from "../hooks/Can";
 import {ProfileDataContext} from "../hooks/ProfileData";
 
 const {Title} = Typography
@@ -16,8 +16,8 @@ export const ProfileBar: React.FC = () => {
     const {user_data} = useContext(ProfileDataContext);
     console.log('ProfileBar dataUser',user_data);
     const logout:MouseEventHandler<HTMLAnchorElement|HTMLButtonElement>=()=>{
-        axios.post(AjaxRoutes.LOGOUT).then(response =>{
-            ability.update(response.data.acl)
+        axios.post(AjaxRoutes.LOGOUT).then(_ =>{
+            ability.update(initialACL)
             navigate(AjaxRoutes.LOGIN, {replace: true})
         } )
     }

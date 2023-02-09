@@ -20,7 +20,7 @@ export const SurveysList:React.FC<ISurveysListProps> = ({onSurveyEnter}) => {
     return (
         <div>
             <Search placeholder="input search text" allowClear style={{width: 200, marginBottom: 20}}/>
-            <Row gutter={[16, 16]}>
+            <Row justify="space-around" gutter={[16, 16]}>
                 {surveys.map(item =>
                     <Col span={20} md={12} xl={8} key={item.id}>
                         <SurveyCardCover title={item.title}

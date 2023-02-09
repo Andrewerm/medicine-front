@@ -6,6 +6,7 @@ import {AjaxRoutes} from "../configs/ajaxRoutes";
 export interface UsersState {
     users: Array<IUser>
     status: LoadingStatusesEnum
+    error_message?:string
 }
 
 const initialState: UsersState = {
@@ -22,9 +23,9 @@ export const fetchUsers = createAsyncThunk<Array<IUser>, undefined, {rejectValue
         }
         else {
             try {
-                const response = await axios.get<IGetDataUsers>(AjaxRoutes.GET_USERS)
+                const response = await axios.get<IGetDataUsers>(AjaxRoutes.GET_USERS,{ withCredentials: true } )
                 console.log('запрос на сервер');
-                return response.data.users;
+                return response.data.items;
             }
             catch (e: unknown) {
                 const error=e as AxiosError
@@ -44,8 +45,9 @@ export const usersSlice=createSlice({
             .addCase(fetchUsers.pending, state=>{
                 state.status=LoadingStatusesEnum.loading
             } )
-            .addCase(fetchUsers.rejected, state => {
+            .addCase(fetchUsers.rejected, (state,action) => {
                 state.status=LoadingStatusesEnum.failed
+                state.error_message=action.payload
             })
             .addCase(fetchUsers.fulfilled, (state, action)=>{
                 state.status=LoadingStatusesEnum.idle

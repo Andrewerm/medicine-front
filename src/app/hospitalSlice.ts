@@ -2,7 +2,6 @@ import {IGetDataHospitals, IHospital, IHospitalWithoutID, IModelPost, LoadingSta
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axios, {AxiosError} from "axios";
 import {AjaxRoutes} from "../configs/ajaxRoutes";
-import {notification} from "antd";
 
 export interface HospitalState {
     hospitals: Array<IHospital>
@@ -26,7 +25,7 @@ export const fetchHospitals = createAsyncThunk<Array<IHospital>, undefined,{reje
         }
         else {
             try {
-                const response = await axios.get<IGetDataHospitals>(AjaxRoutes.GET_HOSPITALS)
+                const response = await axios.get<IGetDataHospitals>(AjaxRoutes.GET_HOSPITALS, { withCredentials: true })
                 console.log('запрос на сервер');
                 return response.data.hospitals;
             }
@@ -43,7 +42,7 @@ export const createHospital = createAsyncThunk<IHospital, IHospitalWithoutID, { 
     async (hospital, {rejectWithValue}) => {
 
         try {
-            const response = await axios.put<IModelPost>(AjaxRoutes.POST_HOSPITAL, hospital)
+            const response = await axios.put<IModelPost>(AjaxRoutes.POST_HOSPITAL, hospital, { withCredentials: true })
             // debugger
             return {id: response.data.data.id, ...hospital};
         } catch (e: unknown) {
@@ -57,7 +56,7 @@ export const updateHospital = createAsyncThunk<IHospital, IHospital, { rejectVal
     'hospitals/updateHospital',
     async (hospital, {rejectWithValue}) => {
         try {
-            await axios.patch(AjaxRoutes.PATCH_HOSPITAL+hospital.id,hospital)
+            await axios.patch(AjaxRoutes.PATCH_HOSPITAL+hospital.id,hospital, { withCredentials: true })
             return hospital
             // debugger
         } catch (e: unknown) {

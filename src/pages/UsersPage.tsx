@@ -1,4 +1,4 @@
-import {Space, Input, Button, Row, Col, Table} from "antd";
+import {Space, Input, Button, Row, Col, Table, notification} from "antd";
 import {ColumnsType} from "antd/es/table";
 import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import React, {useEffect} from "react";
@@ -13,7 +13,7 @@ interface DataType extends IUser{
 }
 
 export const UsersPage: React.FC = () => {
-    const {status, users} =useAppSelector(state=>state.users)
+    const {status, users, error_message} =useAppSelector(state=>state.users)
     // debugger
     const tableData=users as Array<DataType>
     const onSearch = () => {
@@ -24,6 +24,10 @@ export const UsersPage: React.FC = () => {
         dispatch(fetchUsers())
 
     },[dispatch])
+    if (status === LoadingStatusesEnum.failed) {
+        console.log('нотификация', error_message);
+        notification.error({description: 'Ошибка', message: error_message})
+    }
     const columns: ColumnsType<DataType> = [
         ...hospitalsModel.map(item=>({title:item.label, dataIndex: item.field})),
         {
