@@ -1,8 +1,10 @@
 export enum AjaxRoutes {
     ACL='/auth/acl',
     LOGIN='/auth/login',
+    ROUTE_LOGIN='/sign/login',
     LOGOUT='/auth/logout',
     REGISTER='/auth/register',
+    ROUTE_REGISTER='/sign/register',
     REMIND_PASSWORD='/auth/remind',
     HOME='/',
     GET_SURVEYS='/guides/surveys',

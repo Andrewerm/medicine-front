@@ -18,7 +18,7 @@ export const ProfileBar: React.FC = () => {
     const logout:MouseEventHandler<HTMLAnchorElement|HTMLButtonElement>=()=>{
         axios.post(AjaxRoutes.LOGOUT).then(_ =>{
             ability.update(initialACL)
-            navigate(AjaxRoutes.LOGIN, {replace: true})
+            navigate(AjaxRoutes.ROUTE_LOGIN, {replace: true})
         } )
     }
     let FIO=''

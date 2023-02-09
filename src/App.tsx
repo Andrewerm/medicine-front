@@ -24,7 +24,7 @@ export const App: React.FC = () => {
     useEffect(() => {
         const authRoutes = [AjaxRoutes.LOGIN, AjaxRoutes.REGISTER]
         if (!authRoutes.includes(location.pathname as AjaxRoutes) && ability.can('read', ACLEntityEnum.AUTH)) {
-            navigate(AjaxRoutes.LOGIN, {replace: true})
+            navigate(AjaxRoutes.ROUTE_LOGIN, {replace: true})
         } else if (location.pathname !== AjaxRoutes.HOME && ability.can('read', ACLEntityEnum.AUTH)) {
             navigate(AjaxRoutes.HOME, {replace: true})
         }
@@ -39,7 +39,7 @@ export const App: React.FC = () => {
                             {(ability.can('read',ACLEntityEnum.HOSPITALS) || ability.can('update',ACLEntityEnum.HOSPITALS))&& <Route path="hospitals" element={<HospitalsPage/>}/>}
                             {(ability.can('read',ACLEntityEnum.USERS) || ability.can('update', ACLEntityEnum.USERS) )&& <Route path="users" element={<UsersPage/>}/>}
                         </Route>
-                        {ability.can('read', ACLEntityEnum.AUTH) && <Route path="auth" element={<AuthLayout/>}>
+                        {ability.can('read', ACLEntityEnum.AUTH) && <Route path="sign" element={<AuthLayout/>}>
                             <Route path="login" element={<LoginPage/>}/>
                             <Route path="register" element={<RegisterPage/>}/>
                         </Route>}

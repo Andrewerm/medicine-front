@@ -88,7 +88,7 @@ export const LoginPage: React.FC = () => {
                     <Link to={AjaxRoutes.REMIND_PASSWORD}>Забыли пароль?</Link><p/>
                 </Form.Item>
                 <Form.Item wrapperCol={{pull: 6}}>
-                    <Link to={AjaxRoutes.REGISTER}>Зарегистрироваться</Link>
+                    <Link to={AjaxRoutes.ROUTE_REGISTER}>Зарегистрироваться</Link>
                 </Form.Item>
             </Form>
         </>
