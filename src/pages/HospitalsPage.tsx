@@ -151,8 +151,7 @@ export const HospitalsPage: React.FC = () => {
                open={isModalOpen}
                footer={null}
                onCancel={onCancel}
-               destroyOnClose={true}
-        >
+               destroyOnClose={true}>
             <EditModal model={hospitalsModel}
                        editStatus={edit_status}
                        onFinish={onFinish}

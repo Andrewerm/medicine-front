@@ -22,7 +22,7 @@ export const SurveyReport:React.FC<ISurveyReportProps> = ({surveyId, onExit}) =>
         <>
             <Space direction="vertical" size="middle" style={{display: 'flex'}}>
                 <Card> <Typography.Title level={2}>Организация</Typography.Title> </Card>
-                <Card title="Заголовок отчёта">
+                <Card>
                     {survey && survey.report && <div dangerouslySetInnerHTML={{__html: survey.report}}></div>}
                 </Card>
             </Space>

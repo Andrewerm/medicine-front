@@ -59,19 +59,19 @@ export const MainLayout: React.FC = () => {
         <>
             <Header style={headerStyle}>
                 <Row justify="space-between" gutter={10}>
-                    <Col span={20} sm={8}>
+                    <Col >
                         <Space align="center">
                             <HeartInHand/>
                             <Title style={{margin: 0}} level={3}>Медкабинет</Title>
                         </Space>
                     </Col>
                     <Can I="update" a={ACLEntityEnum.HOSPITALS}>
-                        <Col span={4} sm={8}>
+                        <Col span={24} sm={8}>
                             {selectedKey && <Menu defaultSelectedKeys={selectedKey} mode="horizontal" items={items}
                                                   onSelect={menuSelect}/>}
                         </Col>
                     </Can>
-                    <Col flex="auto" span={24} sm={8}>
+                    <Col>
                         <ProfileBar/>
                     </Col>
                 </Row>
