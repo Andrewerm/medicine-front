@@ -66,8 +66,10 @@ export const MainLayout: React.FC = () => {
                         </Space>
                     </Col>
                     <Can I="update" a={ACLEntityEnum.HOSPITALS}>
-                        <Col span={24} sm={8}>
-                            {selectedKey && <Menu defaultSelectedKeys={selectedKey} mode="horizontal" items={items}
+                        <Col flex="auto">
+                            {selectedKey && <Menu defaultSelectedKeys={selectedKey} mode="horizontal"
+                                                  style={{justifyContent: "center"}}
+                                                  items={items}
                                                   onSelect={menuSelect}/>}
                         </Col>
                     </Can>
