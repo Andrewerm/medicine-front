@@ -22,7 +22,8 @@ export const App: React.FC = () => {
     const location = useLocation()
     const navigate = useNavigate()
     useEffect(() => {
-        const authRoutes = [AjaxRoutes.LOGIN, AjaxRoutes.REGISTER]
+        const authRoutes = [AjaxRoutes.ROUTE_REGISTER, AjaxRoutes.ROUTE_LOGIN]
+        if (authRoutes.includes(location.pathname as AjaxRoutes) &&  ability.can('read', ACLEntityEnum.SURVEYS)) navigate(AjaxRoutes.HOME, {replace: true})
         if (!authRoutes.includes(location.pathname as AjaxRoutes) && ability.can('read', ACLEntityEnum.AUTH)) {
             navigate(AjaxRoutes.ROUTE_LOGIN, {replace: true})
         } else if (location.pathname !== AjaxRoutes.HOME && ability.can('read', ACLEntityEnum.AUTH)) {
