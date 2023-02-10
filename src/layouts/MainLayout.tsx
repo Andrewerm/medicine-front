@@ -66,14 +66,14 @@ export const MainLayout: React.FC = () => {
                         </Space>
                     </Col>
                     <Can I="update" a={ACLEntityEnum.HOSPITALS}>
-                        <Col flex="auto">
+                        <Col flex="auto" xs={{order:1}} sm={{order:0}} >
                             {selectedKey && <Menu defaultSelectedKeys={selectedKey} mode="horizontal"
                                                   style={{justifyContent: "center"}}
                                                   items={items}
                                                   onSelect={menuSelect}/>}
                         </Col>
                     </Can>
-                    <Col>
+                    <Col xs={{order:0}} sm={{order:1}}>
                         <ProfileBar/>
                     </Col>
                 </Row>
