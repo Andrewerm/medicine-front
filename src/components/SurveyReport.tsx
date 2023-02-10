@@ -3,6 +3,7 @@ import {useAppDispatch, useAppSelector} from "../hooks/reduxHooks";
 import React, {useContext, useEffect} from "react";
 import {TopPanelContext} from "../hooks/topPanel";
 import {resetAnswers} from "../app/surveysSlice";
+import {WordLogo} from "./images/WordLogo";
 
 interface ISurveyReportProps {
     onExit:  React.MouseEventHandler,
@@ -20,10 +21,15 @@ export const SurveyReport:React.FC<ISurveyReportProps> = ({surveyId, onExit}) =>
     }, []);
     return (
         <>
-            <Space direction="vertical" size="middle" style={{display: 'flex'}}>
-                <Card> <Typography.Title level={2}>Организация</Typography.Title> </Card>
+            <Space direction="vertical" size="middle" >
+                <Space size={"large"}>
+                    <Typography.Title level={3}>Заключение по "{survey && survey.title}"</Typography.Title>
+                    {survey && survey.report && <a href={survey.report.fileLink} target="_blank">
+                        <WordLogo/>
+                    </a>}
+                </Space>
                 <Card>
-                    {survey && survey.report && <div dangerouslySetInnerHTML={{__html: survey.report}}></div>}
+                    {survey && survey.report && <div dangerouslySetInnerHTML={{__html: survey.report.textReport}}></div>}
                 </Card>
             </Space>
         </>

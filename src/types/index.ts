@@ -3,7 +3,10 @@ export interface ISurvey {
     title: string;
     description: string;
     questions: ISurveyItem[];
-    report?: string
+    report?: {
+        textReport:string,
+        fileLink:string
+    }
 }
 
 export interface IUser {
@@ -81,7 +84,13 @@ export interface IGetReportRequest {
 
 export interface IGetReportResponse {
     idSurvey: number,
-    textReport: string
+    textReport: string,
+    fileLink: string
+}
+
+export interface IGetReportRawResponse {
+    appointment: string
+    docx_url: string
 }
 
 export interface Answer {

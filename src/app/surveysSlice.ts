@@ -3,7 +3,7 @@ import axios, {AxiosError} from "axios";
 import {AjaxRoutes} from "../configs/ajaxRoutes";
 import {
     IGetDataSurveys,
-    IGetReport,
+    IGetReportRawResponse,
     IGetReportRequest,
     IGetReportResponse,
     ISetAnswer,
@@ -46,10 +46,11 @@ export const getReport = createAsyncThunk<IGetReportResponse,IGetReportRequest, 
     'surveys/getReport',
     async (arg, {rejectWithValue}) => {
         try {
-            const response = await axios.put(AjaxRoutes.GET_REPORT, arg, { withCredentials: true })
+            const response = await axios.put<IGetReportRawResponse>(AjaxRoutes.GET_REPORT, arg, { withCredentials: true })
             return {
                 idSurvey:arg.id,
-                textReport:response.data
+                textReport:response.data.appointment,
+                fileLink: response.data.docx_url
             }
         }
         catch (e:unknown) {
@@ -99,7 +100,7 @@ export const surveysSlice = createSlice({
             .addCase(getReport.fulfilled, (state, action) => {
                 state.status = LoadingStatusesEnum.idle;
                 const survey=state.surveys.find(item=>item.id===action.payload.idSurvey)
-                if (survey) survey.report=action.payload.textReport
+                if (survey) survey.report=action.payload
             })
             .addCase(getReport.rejected, (state,action) => {
                 state.status = LoadingStatusesEnum.failed;
