@@ -1,4 +1,4 @@
-import {Space, Input, Button, Row, Col, Table, notification, Modal, Popconfirm} from "antd";
+import {Button, Col, Input, Modal, notification, Popconfirm, Row, Space, Table} from "antd";
 import {ColumnsType} from "antd/es/table";
 import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import React, {useEffect, useState} from "react";
@@ -7,6 +7,7 @@ import {deleteUser, fetchUsers} from "../app/userSlice";
 import {IHospital, IHospitalWithoutID, IUser, LoadingStatusesEnum} from "../types";
 import {usersModel} from "../models/users";
 import {EditModal} from "../components/EditModal";
+import {fetchHospitals} from "../app/hospitalSlice";
 
 const {Search} = Input
 
@@ -18,13 +19,25 @@ export const UsersPage: React.FC = () => {
     const [isNewItem, setNewItem] = useState<boolean>(true); // признак новой записи
     const [isModalOpen, setIsModalOpen] = useState(false); // окно редактирования открыто
     const {status, users, edit_status, error_message, delete_status} = useAppSelector(state => state.users)
+    const {status: status_hospitals, hospitals} = useAppSelector(state => state.hospitals)
     const [initialValues, setInitialValues] = useState<IUser | undefined>(undefined); // начальные данные для редактирования
     const [editedID, setEditedID] = useState<number | null>(null); // текущий ID, который редактируется
-    // debugger
-    const tableData = users as Array<DataType>
-    const onSearch = () => {
-
-    }
+    const [searchString, setSearchString] = useState(''); // строка поиска
+    const tableData = (users as Array<DataType>)
+        .filter((item: IUser) => {
+            if (searchString === '') return true
+            else {
+                const fieldsForFilter = usersModel.filter(item2 => item2.filterable).map(item4 => item4.field)
+                const unionString = fieldsForFilter.map((item3) => {
+                    const typeSelector = usersModel.find(item5 => item5.field === item3)?.type === 'selector'
+                    if (typeSelector) {
+                        const hospital = hospitals.find((item6) => item6.id === Number(item[item3]))
+                        return hospital?.name_short.toLowerCase()
+                    } else return item[item3].toString().toLowerCase()
+                }).join(' ')
+                return unionString.includes(searchString.trim().toLowerCase())
+            }
+        })
     const closeModal = () => {
         setIsModalOpen(false);
     };
@@ -45,6 +58,7 @@ export const UsersPage: React.FC = () => {
     const dispatch = useAppDispatch()
     useEffect(() => {
         dispatch(fetchUsers())
+        dispatch(fetchHospitals())
 
     }, [dispatch])
     if (status === LoadingStatusesEnum.failed) {
@@ -70,7 +84,15 @@ export const UsersPage: React.FC = () => {
         showModal()
     }
     const columns: ColumnsType<DataType> = [
-        ...usersModel.map(item => ({title: item.label, dataIndex: item.field})),
+        ...usersModel.map(item => ({
+            title: item.label,
+            key: item.field,
+            dataIndex: item.field,
+            render: item.type === 'selector' ? (text: string) => {
+                const hospital = hospitals.find(item => item.id === parseInt(text))
+                return hospital ? hospital.name_short : '...'
+            } : undefined
+        })),
         {
             key: 'action',
             render: (_, record) => (
@@ -90,24 +112,26 @@ export const UsersPage: React.FC = () => {
         },
     ];
     return (<>
-        <Row justify="center" gutter={[10, 10]}>
-            <Col span={24} md={20} lg={16}>
-                <Row justify="space-between" gutter={[10, 10]}>
-                    <Col>
-                        <Search placeholder="input search text" onSearch={onSearch} style={{width: 200}}/>
-                    </Col>
-                    <Col>
-                        <Button onClick={newItem} type="primary">Добавить пользователя</Button>
-                    </Col>
-                </Row>
-                <Table loading={status === LoadingStatusesEnum.loading}
-                       rowKey={(record) => record.email}
-                       columns={columns}
-                       dataSource={tableData}
-                       scroll={{x:500}}/>
+            <Row justify="center" gutter={[10, 10]}>
+                <Col span={24} md={20} lg={16}>
+                    <Row justify="space-between" gutter={[10, 10]}>
+                        <Col>
+                            <Search allowClear={true} placeholder="Поиск по таблице" onSearch={setSearchString}
+                                    style={{width: 200}}/>
+                        </Col>
+                        <Col>
+                            <Button onClick={newItem} type="primary">Добавить пользователя</Button>
+                        </Col>
+                    </Row>
+                    <Table
+                        loading={(status === LoadingStatusesEnum.loading || status_hospitals === LoadingStatusesEnum.loading)}
+                        rowKey={(record) => record.email}
+                        columns={columns}
+                        dataSource={tableData}
+                        scroll={{x: 500}}/>
 
-            </Col>
-        </Row>
+                </Col>
+            </Row>
             <Modal title={isNewItem ? 'Добавление' : 'Редактирование'}
                    open={isModalOpen}
                    footer={null}

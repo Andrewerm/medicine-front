@@ -14,7 +14,8 @@ export interface IUser {
     FIO: string,
     phone: string,
     email: string,
-    idHospitals: number
+    idHospitals: string,
+    [key:string]:string|number
 }
 
 export interface IHospitalWithoutID {

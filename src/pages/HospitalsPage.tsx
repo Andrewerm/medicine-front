@@ -52,7 +52,6 @@ export const HospitalsPage: React.FC = () => {
         }
     }, [delete_status])
 
-
     const tableData = (hospitals as Array<DataType>)
         .filter((item: IHospital) => {
             if (searchString === '') return true
