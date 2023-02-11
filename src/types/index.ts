@@ -9,13 +9,16 @@ export interface ISurvey {
     }
 }
 
-export interface IUser {
-    id: number,
+export interface IUserWithoutID {
     FIO: string,
     phone: string,
     email: string,
     idHospitals: string,
     [key:string]:string|number
+}
+
+export interface IUser extends IUserWithoutID{
+    id: number;
 }
 
 export interface IHospitalWithoutID {
@@ -55,11 +58,13 @@ export interface IGetReport {
         textReport: string
     }
 }
-export interface IModelPost {
+export interface IHospitalPost {
         hospital_id: number
 }
 
-
+export interface IUserPost {
+    user_id: number
+}
 
 export interface IUserProfile {
     email: string,

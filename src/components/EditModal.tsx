@@ -2,6 +2,7 @@ import React from "react";
 import {Button, Form, Input} from "antd";
 import {IModel} from "../models/types";
 import {IHospital, IUser, LoadingStatusesEnum} from "../types";
+import {HospitalSelector} from "./HospitalSelector";
 
 interface ModalProps {
     model: Array<IModel>,
@@ -25,9 +26,10 @@ export const EditModal: React.FC<ModalProps> = ({model, onFinish, onFinishFailed
                 key={item.field}
                 label={item.label}
                 name={item.field}
-                rules={item.rules}
-            >
-                <Input/>
+                rules={item.rules}>
+                {item.type==='selector'?
+                    <HospitalSelector/>
+                    :<Input/>}
             </Form.Item>)}
             <Form.Item wrapperCol={{offset: 8, span: 16}}>
                 <Button loading={editStatus===LoadingStatusesEnum.loading} type="primary" htmlType="submit">

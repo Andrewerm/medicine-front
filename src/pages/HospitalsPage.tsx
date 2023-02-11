@@ -130,7 +130,8 @@ export const HospitalsPage: React.FC = () => {
             <Col span={24} md={20} lg={16}>
                 <Row justify="space-between" gutter={[10, 10]}>
                     <Col>
-                        <Search allowClear={true} placeholder="Поиск по таблице" onSearch={setSearchString} style={{width: 200}}/>
+                        <Search allowClear={true} placeholder="Поиск по таблице" onSearch={setSearchString}
+                                style={{width: 200}}/>
                     </Col>
                     <Col>
                         <Button onClick={newItem} type="primary">Добавить больницу</Button>

@@ -22,12 +22,12 @@ const initialState: SurveysState = {
     surveys: []
 };
 
-export const fetchSurveys = createAsyncThunk<Array<ISurvey>, undefined,  {rejectValue:string, state:{surveys: SurveysState}}>(
+export const fetchSurveys = createAsyncThunk<Array<ISurvey>|undefined, undefined,  {rejectValue:string, state:{surveys: SurveysState}}>(
     'surveys/fetchSurveys',
     async (_, {getState, rejectWithValue} ) => {
         const state=getState()
-        if (state.surveys.surveys.length) return state.surveys.surveys
-        else {
+        if (!state.surveys.surveys.length)
+         {
             try {
                 const response = await axios.get<IGetDataSurveys>(AjaxRoutes.GET_SURVEYS, { withCredentials: true })
                 console.log('запрос на сервер');
@@ -88,7 +88,7 @@ export const surveysSlice = createSlice({
             })
             .addCase(fetchSurveys.fulfilled, (state, action) => {
                 state.status = LoadingStatusesEnum.idle;
-                state.surveys=action.payload
+                if (action.payload) state.surveys=action.payload
             })
             .addCase(fetchSurveys.rejected, (state,action ) => {
                 state.status = LoadingStatusesEnum.failed;

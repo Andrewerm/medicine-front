@@ -1,4 +1,4 @@
-import {IGetDataHospitals, IHospital, IHospitalWithoutID, IModelPost, LoadingStatusesEnum} from "../types";
+import {IGetDataHospitals, IHospital, IHospitalWithoutID, IHospitalPost, LoadingStatusesEnum} from "../types";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
 import axios, {AxiosError} from "axios";
 import {AjaxRoutes} from "../configs/ajaxRoutes";
@@ -18,14 +18,11 @@ const initialState: HospitalState = {
     hospitals: []
 };
 
-export const fetchHospitals = createAsyncThunk<Array<IHospital>, undefined,{rejectValue:string, state:{hospitals:HospitalState}}>(
+export const fetchHospitals = createAsyncThunk<Array<IHospital>|undefined, undefined,{rejectValue:string, state:{hospitals:HospitalState}}>(
     'hospitals/fetchHospitals',
     async (_, {getState, rejectWithValue}) => {
         const state = getState()
-        if ( getState().hospitals.hospitals.length) {
-         return state.hospitals.hospitals
-        }
-        else {
+        if ( !getState().hospitals.hospitals.length) {
             try {
                 const response = await axios.get<IGetDataHospitals>(AjaxRoutes.GET_HOSPITALS, { withCredentials: true })
                 console.log('запрос на сервер');
@@ -43,8 +40,7 @@ export const createHospital = createAsyncThunk<IHospital, IHospitalWithoutID, { 
     'hospitals/createHospital',
     async (hospital, {rejectWithValue}) => {
         try {
-            const response = await axios.put<IModelPost>(AjaxRoutes.POST_HOSPITAL, hospital, { withCredentials: true })
-            // debugger
+            const response = await axios.put<IHospitalPost>(AjaxRoutes.POST_HOSPITAL, hospital, { withCredentials: true })
             return {id: response.data.hospital_id, ...hospital};
         } catch (e: unknown) {
             const error = e as AxiosError
@@ -59,7 +55,6 @@ export const updateHospital = createAsyncThunk<IHospital, IHospital, { rejectVal
         try {
             await axios.patch(AjaxRoutes.PATCH_HOSPITAL+hospital.id,hospital, { withCredentials: true })
             return hospital
-            // debugger
         } catch (e: unknown) {
             const error = e as AxiosError
             return rejectWithValue(error.message)
@@ -73,7 +68,6 @@ export const deleteHospital=createAsyncThunk<number,number, { rejectValue: strin
         try {
             await axios.delete(AjaxRoutes.DELETE_HOSPITAL+idHospital, { withCredentials: true })
             return idHospital
-            // debugger
         } catch (e: unknown) {
             const error = e as AxiosError<{message: string}>
             if (error.response?.status===422 &&  error.response?.data) return rejectWithValue(error.response.data.message)
@@ -104,7 +98,7 @@ export const hospitalsSlice = createSlice({
             .addCase(fetchHospitals.fulfilled, (state, action) => {
                 // debugger
                 state.status = LoadingStatusesEnum.idle
-                state.hospitals = action.payload
+                if (action.payload) state.hospitals = action.payload
             })
             .addCase(createHospital.pending, state => {
                 state.edit_status = LoadingStatusesEnum.loading

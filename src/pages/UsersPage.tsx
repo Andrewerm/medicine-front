@@ -3,11 +3,11 @@ import {ColumnsType} from "antd/es/table";
 import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import React, {useEffect, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../hooks/reduxHooks";
-import {deleteUser, fetchUsers} from "../app/userSlice";
-import {IHospital, IHospitalWithoutID, IUser, LoadingStatusesEnum} from "../types";
+import {createUser, deleteUser, fetchUsers, updateUser} from "../app/userSlice";
+import {IUser, IUserWithoutID, LoadingStatusesEnum} from "../types";
 import {usersModel} from "../models/users";
 import {EditModal} from "../components/EditModal";
-import {fetchHospitals} from "../app/hospitalSlice";
+import {setDeleteStatusToIdle, setStatusToIdle} from "../app/hospitalSlice";
 
 const {Search} = Input
 
@@ -23,6 +23,27 @@ export const UsersPage: React.FC = () => {
     const [initialValues, setInitialValues] = useState<IUser | undefined>(undefined); // начальные данные для редактирования
     const [editedID, setEditedID] = useState<number | null>(null); // текущий ID, который редактируется
     const [searchString, setSearchString] = useState(''); // строка поиска
+    useEffect(() => {
+        if (edit_status === LoadingStatusesEnum.done) {
+            notification.success({description: 'Успешно', message: 'Обновление данных'})
+            dispatch(setStatusToIdle())
+            closeModal()
+        }
+        if (edit_status === LoadingStatusesEnum.failed || delete_status=== LoadingStatusesEnum.failed) {
+            notification.error({
+                description: 'Ошибка',
+                message: error_message
+            })
+            dispatch(setDeleteStatusToIdle())
+        }
+
+    }, [edit_status,delete_status])
+    useEffect(() => {
+        if (delete_status === LoadingStatusesEnum.done) {
+            notification.warning({description: 'Успешно', message: 'Удаление пользователя'})
+            dispatch(setDeleteStatusToIdle())
+        }
+    }, [delete_status])
     const tableData = (users as Array<DataType>)
         .filter((item: IUser) => {
             if (searchString === '') return true
@@ -44,13 +65,13 @@ export const UsersPage: React.FC = () => {
     const onCancel = () => {
         closeModal()
     }
-    const onFinish = (values: IHospital | IHospitalWithoutID) => {
-        // if (isNewItem) dispatch(createUser(values as IHospitalWithoutID))
-        // else if (editedID) {
-        //     const val = values as IHospital
-        //     val.id = editedID // добавляем ID
-        //     dispatch(updateHospital(val))
-        // }
+    const onFinish = (values: IUser | IUserWithoutID) => {
+        if (isNewItem) dispatch(createUser(values as IUserWithoutID))
+        else if (editedID) {
+            const val = values as IUser
+            val.id = editedID // добавляем ID
+            dispatch(updateUser(val))
+        }
     };
     const confirmDelete = (idUser: number) => {
         dispatch(deleteUser(idUser))
@@ -58,7 +79,6 @@ export const UsersPage: React.FC = () => {
     const dispatch = useAppDispatch()
     useEffect(() => {
         dispatch(fetchUsers())
-        dispatch(fetchHospitals())
 
     }, [dispatch])
     if (status === LoadingStatusesEnum.failed) {
@@ -123,13 +143,14 @@ export const UsersPage: React.FC = () => {
                             <Button onClick={newItem} type="primary">Добавить пользователя</Button>
                         </Col>
                     </Row>
+                </Col>
+                <Col span={24} md={20} lg={16}>
                     <Table
                         loading={(status === LoadingStatusesEnum.loading || status_hospitals === LoadingStatusesEnum.loading)}
                         rowKey={(record) => record.email}
                         columns={columns}
                         dataSource={tableData}
                         scroll={{x: 500}}/>
-
                 </Col>
             </Row>
             <Modal title={isNewItem ? 'Добавление' : 'Редактирование'}
