@@ -1,4 +1,4 @@
-import {GuidesEnum, IModel} from "./types";
+import {IModel} from "./types";
 
 export const usersModel:Array<IModel>=[
     {
@@ -20,10 +20,16 @@ export const usersModel:Array<IModel>=[
         rules: [{ required: true, message: 'Обязательное поле' }]
     },
     {
+        field: 'is_active',
+        label: 'Активный',
+        type: 'switcher',
+        rules: []
+    },
+    {
         field: 'hospital_id',
         label: 'Больница',
         type: 'selector',
-        guideId: GuidesEnum.hospitals,
+        // guideId: GuidesEnum.hospitals,
         filterable:true,
         rules: [{ required: true, message: 'Обязательное поле' }]
     },

@@ -7,7 +7,8 @@ import {createUser, deleteUser, fetchUsers, updateUser} from "../app/userSlice";
 import {IUser, IUserWithoutID, LoadingStatusesEnum} from "../types";
 import {usersModel} from "../models/users";
 import {EditModal} from "../components/EditModal";
-import {setDeleteStatusToIdle, setStatusToIdle} from "../app/hospitalSlice";
+import {fetchHospitals, setDeleteStatusToIdle, setStatusToIdle} from "../app/hospitalSlice";
+import {InputTypesInterface} from "../models/types";
 
 const {Search} = Input
 
@@ -79,10 +80,9 @@ export const UsersPage: React.FC = () => {
     const dispatch = useAppDispatch()
     useEffect(() => {
         dispatch(fetchUsers())
-
+        dispatch(fetchHospitals())
     }, [dispatch])
     if (status === LoadingStatusesEnum.failed) {
-        console.log('нотификация', error_message);
         notification.error({description: 'Ошибка', message: error_message})
     }
     const onFinishFailed = (errorInfo: any) => {
@@ -103,15 +103,23 @@ export const UsersPage: React.FC = () => {
         setEditedID(id)
         showModal()
     }
+
+    const selectRender=(param?:InputTypesInterface)=>{
+        switch (param) {
+            case 'selector': return (text: number) => {
+                const hospital = hospitals.find(item => item.id === text)
+                return hospital ? hospital.name_short : '...'
+            }
+            case 'switcher': return (text: boolean)=>{ return text?'да':'нет'}
+        }
+    }
+
     const columns: ColumnsType<DataType> = [
         ...usersModel.map(item => ({
             title: item.label,
             key: item.field,
             dataIndex: item.field,
-            render: item.type === 'selector' ? (text: string) => {
-                const hospital = hospitals.find(item => item.id === parseInt(text))
-                return hospital ? hospital.name_short : '...'
-            } : undefined
+            render: selectRender(item.type)
         })),
         {
             key: 'action',

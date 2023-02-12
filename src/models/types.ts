@@ -1,3 +1,4 @@
+export type InputTypesInterface='selector'|'switcher'
 
 export interface IModel {
     field: string,
@@ -5,7 +6,7 @@ export interface IModel {
     hiddenInTable?: boolean,
     filterable?: boolean,
     rules: Array<any>,
-    type?: 'selector',
+    type?: InputTypesInterface,
     guideId?: GuidesEnum
 }
 

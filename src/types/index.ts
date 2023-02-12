@@ -13,8 +13,9 @@ export interface IUserWithoutID {
     FIO: string,
     phone: string,
     email: string,
-    idHospitals: string,
-    [key:string]:string|number
+    is_active: boolean,
+    idHospitals: number,
+    [key:string]:string|number|boolean
 }
 
 export interface IUser extends IUserWithoutID{

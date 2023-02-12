@@ -1,18 +1,30 @@
 import React from "react";
 import {Button, Form, Input} from "antd";
-import {IModel} from "../models/types";
+import {IModel, InputTypesInterface} from "../models/types";
 import {IHospital, IUser, LoadingStatusesEnum} from "../types";
 import {HospitalSelector} from "./HospitalSelector";
+import {ActiveSwitcher} from "./ActiveSwitcher";
 
 interface ModalProps {
     model: Array<IModel>,
     onFinish: (values: any) => void,
     onFinishFailed: (errorInfo: any) => void,
     editStatus: LoadingStatusesEnum
-    initialValues:IHospital|IUser|undefined
+    initialValues: IHospital | IUser | undefined
 }
 
-export const EditModal: React.FC<ModalProps> = ({model, onFinish, onFinishFailed, editStatus,initialValues}) => {
+export const EditModal: React.FC<ModalProps> = ({model, onFinish, onFinishFailed, editStatus, initialValues}) => {
+
+    const renderSwitch = (param?: InputTypesInterface) => {
+        switch (param) {
+            case 'selector':
+                return <HospitalSelector/>
+            case 'switcher':
+                return <ActiveSwitcher/>
+            default:
+                return <Input/>
+        }
+    }
     return <>
         <Form
             labelCol={{span: 8}}
@@ -27,12 +39,10 @@ export const EditModal: React.FC<ModalProps> = ({model, onFinish, onFinishFailed
                 label={item.label}
                 name={item.field}
                 rules={item.rules}>
-                {item.type==='selector'?
-                    <HospitalSelector/>
-                    :<Input/>}
+                {renderSwitch(item.type)}
             </Form.Item>)}
             <Form.Item wrapperCol={{offset: 8, span: 16}}>
-                <Button loading={editStatus===LoadingStatusesEnum.loading} type="primary" htmlType="submit">
+                <Button loading={editStatus === LoadingStatusesEnum.loading} type="primary" htmlType="submit">
                     Сохранить
                 </Button>
             </Form.Item>
