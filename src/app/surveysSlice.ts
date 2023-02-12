@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
-import axios, {AxiosError} from "axios";
+import axios from "../configs/axios";
 import {AjaxRoutes} from "../configs/ajaxRoutes";
 import {
     IGetDataSurveys,
@@ -10,6 +10,7 @@ import {
     ISurvey,
     LoadingStatusesEnum
 } from "../types";
+import {AxiosError} from "axios";
 
 export interface SurveysState {
     surveys: Array<ISurvey>

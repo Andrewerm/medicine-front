@@ -1,6 +1,7 @@
 import {IGetDataHospitals, IHospital, IHospitalWithoutID, IHospitalPost, LoadingStatusesEnum} from "../types";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import axios, {AxiosError} from "axios";
+import {AxiosError} from "axios";
+import axios from "../configs/axios";
 import {AjaxRoutes} from "../configs/ajaxRoutes";
 
 export interface HospitalState {

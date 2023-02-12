@@ -7,7 +7,6 @@ import './index.css';
 import {BrowserRouter} from "react-router-dom";
 import {AbilityContext} from './hooks/Can'
 
-import './mock'
 import 'antd/dist/reset.css';
 import {App as AppAnt, ConfigProvider} from 'antd';
 import {GetAbility} from "./components/GetAbility";

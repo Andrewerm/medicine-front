@@ -1,5 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
-import axios, {AxiosError} from "axios";
+import {AxiosError} from "axios";
+import axios from "../configs/axios";
 import {AjaxRoutes} from "../configs/ajaxRoutes";
 import {AbilityContext} from "../hooks/Can";
 import {Spinner} from "./Spinner";
