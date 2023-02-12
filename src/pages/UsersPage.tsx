@@ -3,11 +3,11 @@ import {ColumnsType} from "antd/es/table";
 import {DeleteOutlined, EditOutlined} from "@ant-design/icons";
 import React, {useEffect, useState} from "react";
 import {useAppDispatch, useAppSelector} from "../hooks/reduxHooks";
-import {createUser, deleteUser, fetchUsers, updateUser} from "../app/userSlice";
+import {createUser, deleteUser, fetchUsers, setDeleteStatusToIdle, setStatusToIdle, updateUser} from "../app/userSlice";
 import {IUser, IUserWithoutID, LoadingStatusesEnum} from "../types";
 import {usersModel} from "../models/users";
 import {EditModal} from "../components/EditModal";
-import {fetchHospitals, setDeleteStatusToIdle, setStatusToIdle} from "../app/hospitalSlice";
+import {fetchHospitals} from "../app/hospitalSlice";
 import {InputTypesInterface} from "../models/types";
 
 const {Search} = Input
@@ -155,7 +155,7 @@ export const UsersPage: React.FC = () => {
                 <Col span={24} md={20} lg={16}>
                     <Table
                         loading={(status === LoadingStatusesEnum.loading || status_hospitals === LoadingStatusesEnum.loading)}
-                        rowKey={(record) => record.email}
+                        rowKey={(record) => record.id}
                         columns={columns}
                         dataSource={tableData}
                         scroll={{x: 500}}/>

@@ -90,7 +90,14 @@ export const deleteUser=createAsyncThunk<number,number, { rejectValue: string,  
 export const usersSlice=createSlice({
     name: 'users',
     initialState,
-    reducers: {},
+    reducers: {
+        setStatusToIdle(state){
+            state.edit_status=LoadingStatusesEnum.idle
+        },
+        setDeleteStatusToIdle(state){
+            state.delete_status=LoadingStatusesEnum.idle
+        }
+    },
     extraReducers: (builder)=>{
         builder
             .addCase(fetchUsers.pending, state=>{
@@ -141,5 +148,5 @@ export const usersSlice=createSlice({
 }
 
 })
-
+export const {setStatusToIdle, setDeleteStatusToIdle} = usersSlice.actions;
 export default usersSlice.reducer

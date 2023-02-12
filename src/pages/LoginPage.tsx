@@ -17,7 +17,7 @@ export interface IGetLogin {
 export const LoginPage: React.FC = () => {
     const inputRef = useRef<InputRef>(null);
     const [form] = Form.useForm();
-    form.setFieldsValue({ email: 'a.m.vinokurov@gmail.com', password: '123456789' });
+    // form.setFieldsValue({ email: 'a.m.vinokurov@gmail.com', password: '123456789' });
     const ability = useContext(AbilityContext);
     const {setDataUser} = useContext(ProfileDataContext);
     const navigate = useNavigate()
@@ -25,13 +25,9 @@ export const LoginPage: React.FC = () => {
         if (inputRef.current) inputRef.current.focus()
     }, [])
     const onFinish = (values: any) => {
-        console.log('Success:', values);
-        console.log('form',form.getFieldsValue());
         axios.post<IGetLogin>(AjaxRoutes.LOGIN, form.getFieldsValue(),  { withCredentials: true })
             .then(response => {
-                console.log('response', response);
                 ability.update(response.data.acl)
-                // debugger
                 if (response.data?.user_data)
                     setDataUser(response.data.user_data)
                 navigate(AjaxRoutes.HOME, {replace: true})
