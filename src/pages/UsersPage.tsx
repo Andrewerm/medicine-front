@@ -51,7 +51,7 @@ export const UsersPage: React.FC = () => {
             else {
                 const fieldsForFilter = usersModel.filter(item2 => item2.filterable).map(item4 => item4.field)
                 const unionString = fieldsForFilter.map((item3) => {
-                    const typeSelector = usersModel.find(item5 => item5.field === item3)?.type === 'selector'
+                    const typeSelector = usersModel.find(item5 => item5.field === item3)?.type === 'hospital_selector'
                     if (typeSelector) {
                         const hospital = hospitals.find((item6) => item6.id === Number(item[item3]))
                         return hospital?.name_short.toLowerCase()
@@ -106,11 +106,12 @@ export const UsersPage: React.FC = () => {
 
     const selectRender=(param?:InputTypesInterface)=>{
         switch (param) {
-            case 'selector': return (text: number) => {
+            case 'hospital_selector': return (text: number) => {
                 const hospital = hospitals.find(item => item.id === text)
                 return hospital ? hospital.name_short : '...'
             }
-            case 'switcher': return (text: boolean)=>{ return text?'да':'нет'}
+            case 'active_switcher': return (text: boolean)=>{ return text?'да':'нет'}
+            case 'role_selector': return (text: string)=>{ return text==="1"?'Админ':'Медработник'}
         }
     }
 

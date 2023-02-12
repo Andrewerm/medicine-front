@@ -4,6 +4,7 @@ import {IModel, InputTypesInterface} from "../models/types";
 import {IHospital, IUser, LoadingStatusesEnum} from "../types";
 import {HospitalSelector} from "./HospitalSelector";
 import {ActiveSwitcher} from "./ActiveSwitcher";
+import {RoleSelector} from "./RoleSelector";
 
 interface ModalProps {
     model: Array<IModel>,
@@ -17,10 +18,12 @@ export const EditModal: React.FC<ModalProps> = ({model, onFinish, onFinishFailed
 
     const renderSwitch = (param?: InputTypesInterface) => {
         switch (param) {
-            case 'selector':
+            case 'hospital_selector':
                 return <HospitalSelector/>
-            case 'switcher':
+            case 'active_switcher':
                 return <ActiveSwitcher/>
+            case 'role_selector':
+                return <RoleSelector/>
             default:
                 return <Input/>
         }

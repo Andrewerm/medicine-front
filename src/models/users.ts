@@ -1,6 +1,13 @@
 import {IModel} from "./types";
 
 export const usersModel:Array<IModel>=[
+
+    {
+        field: 'email',
+        label: 'Email',
+        filterable:true,
+        rules: [{ required: true, type: 'email' , message: 'Email обязательное поле' }]
+    },
     {
         field: 'first_name',
         label: 'Имя',
@@ -12,6 +19,11 @@ export const usersModel:Array<IModel>=[
         label: 'Фамилия',
         filterable:true,
         rules: [{ required: true, message: 'Обязательное поле' }]
+    },{
+        field: 'middle_name',
+        label: 'Отчество',
+        filterable:true,
+        rules: []
     },
     {
         field: 'phone',
@@ -22,13 +34,13 @@ export const usersModel:Array<IModel>=[
     {
         field: 'is_active',
         label: 'Активный',
-        type: 'switcher',
+        type: 'active_switcher',
         rules: []
     },
     {
         field: 'hospital_id',
         label: 'Больница',
-        type: 'selector',
+        type: 'hospital_selector',
         // guideId: GuidesEnum.hospitals,
         filterable:true,
         rules: [{ required: true, message: 'Обязательное поле' }]
@@ -37,6 +49,12 @@ export const usersModel:Array<IModel>=[
         field: 'position',
         label: 'Должность',
         filterable:true,
+        rules: [{ required: true, message: 'Обязательное поле' }]
+    },
+    {
+        field: 'role_id',
+        label: 'Роль',
+        type: 'role_selector',
         rules: [{ required: true, message: 'Обязательное поле' }]
     }
 ]

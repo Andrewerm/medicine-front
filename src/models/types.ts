@@ -1,4 +1,4 @@
-export type InputTypesInterface='selector'|'switcher'
+export type InputTypesInterface='hospital_selector'|'active_switcher'|'role_selector'
 
 export interface IModel {
     field: string,

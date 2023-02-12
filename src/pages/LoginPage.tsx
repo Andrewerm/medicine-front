@@ -17,7 +17,7 @@ export interface IGetLogin {
 export const LoginPage: React.FC = () => {
     const inputRef = useRef<InputRef>(null);
     const [form] = Form.useForm();
-    // form.setFieldsValue({ email: 'a.m.vinokurov@gmail.com', password: '123456789' });
+    if (process.env.NODE_ENV==='development') form.setFieldsValue({ email: 'a.m.vinokurov@gmail.com', password: '123456789' });
     const ability = useContext(AbilityContext);
     const {setDataUser} = useContext(ProfileDataContext);
     const navigate = useNavigate()

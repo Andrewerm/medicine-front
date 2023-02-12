@@ -10,11 +10,14 @@ export interface ISurvey {
 }
 
 export interface IUserWithoutID {
-    FIO: string,
+    first_name: string,
+    middle_name: string,
+    last_name: string,
+    role_id: string,
     phone: string,
     email: string,
     is_active: boolean,
-    idHospitals: number,
+    hospital_id: number,
     [key:string]:string|number|boolean
 }
 
