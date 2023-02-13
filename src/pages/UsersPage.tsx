@@ -130,7 +130,7 @@ export const UsersPage: React.FC = () => {
                     <Button onClick={() => editItem(record.id)} icon={<EditOutlined/>}/>
                     <Popconfirm
                         title="Удаление"
-                        description="Вы уверены, что хотите удалить больницу?"
+                        description="Вы уверены, что хотите удалить пользователя?"
                         onConfirm={() => confirmDelete(record.id)}
                         okText="Да"
                         cancelText="Нет"

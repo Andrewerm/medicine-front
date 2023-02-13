@@ -2,9 +2,9 @@ import React from "react";
 import {Button, Form, Input} from "antd";
 import {IModel, InputTypesInterface} from "../models/types";
 import {IHospital, IUser, LoadingStatusesEnum} from "../types";
-import {HospitalSelector} from "./HospitalSelector";
-import {ActiveSwitcher} from "./ActiveSwitcher";
-import {RoleSelector} from "./RoleSelector";
+import {HospitalSelector} from "./ui-components/HospitalSelector";
+import {ActiveSwitcher} from "./ui-components/ActiveSwitcher";
+import {RoleSelector} from "./ui-components/RoleSelector";
 
 interface ModalProps {
     model: Array<IModel>,
