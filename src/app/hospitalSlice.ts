@@ -23,7 +23,7 @@ export const fetchHospitals = createAsyncThunk<Array<IHospital>|undefined, undef
     'hospitals/fetchHospitals',
     async (_, {getState, rejectWithValue}) => {
         const state = getState()
-        if ( !getState().hospitals.hospitals.length) {
+        if ( !state.hospitals.hospitals.length) {
             try {
                 const response = await axios.get<IGetDataHospitals>(AjaxRoutes.GET_HOSPITALS, { withCredentials: true })
                 console.log('запрос на сервер');
@@ -34,6 +34,7 @@ export const fetchHospitals = createAsyncThunk<Array<IHospital>|undefined, undef
                 return rejectWithValue(error.message)
             }
         }
+        else return state.hospitals.hospitals
     }
 );
 

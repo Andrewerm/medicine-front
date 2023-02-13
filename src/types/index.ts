@@ -118,6 +118,39 @@ export enum ACLEntityEnum {
     AUTH = 'auth',
     HOSPITALS = 'hospitals',
     USERS = 'users',
-    SURVEYS = 'surveys'
+    SURVEYS = 'surveys',
+    ANALITYCS='analytics'
+}
 
+
+
+export interface Variant {
+    id: number;
+    name_full: string;
+    name_short: string;
+    hospital_id?: number;
+}
+
+export interface Parametrer {
+    id: string;
+    name: string;
+    type: string;
+    variants: Variant[];
+    value: Array<number>|Date|undefined
+}
+
+export interface IAnalytic {
+    description: string;
+    id: string;
+    parametrers: Parametrer[];
+    title: string;
+}
+
+export interface IAnalytics {
+    analytics: IAnalytic[];
+}
+
+export enum ReportInputTypesEnum {
+    list='list',
+    timestamp='timestamp'
 }

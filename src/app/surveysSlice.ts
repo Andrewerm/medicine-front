@@ -23,11 +23,10 @@ const initialState: SurveysState = {
     surveys: []
 };
 
-export const fetchSurveys = createAsyncThunk<Array<ISurvey>|undefined, undefined,  {rejectValue:string, state:{surveys: SurveysState}}>(
+export const fetchSurveys = createAsyncThunk<Array<ISurvey>, undefined,  {rejectValue:string, state:{surveys: SurveysState}}>(
     'surveys/fetchSurveys',
     async (_, {getState, rejectWithValue} ) => {
-        const state=getState()
-        if (!state.surveys.surveys.length)
+        if (!getState().surveys.surveys.length)
          {
             try {
                 const response = await axios.get<IGetDataSurveys>(AjaxRoutes.GET_SURVEYS, { withCredentials: true })
@@ -39,6 +38,7 @@ export const fetchSurveys = createAsyncThunk<Array<ISurvey>|undefined, undefined
                 return rejectWithValue(error.message)
             }
         }
+        return getState().surveys.surveys
 
     }
 );

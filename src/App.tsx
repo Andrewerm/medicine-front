@@ -14,6 +14,7 @@ import {AjaxRoutes} from "./configs/ajaxRoutes";
 import {useAbility} from "@casl/react";
 import {TopPanelContext} from "./hooks/topPanel";
 import {ACLEntityEnum} from "./types";
+import {AnalyticPage} from "./pages/AnalyticPage";
 
 
 export const App: React.FC = () => {
@@ -40,6 +41,7 @@ export const App: React.FC = () => {
                             {ability.can('read', ACLEntityEnum.SURVEYS) && <Route index element={<SurveyPage/>}/>}
                             {(ability.can('read',ACLEntityEnum.HOSPITALS) || ability.can('update',ACLEntityEnum.HOSPITALS))&& <Route path="hospitals" element={<HospitalsPage/>}/>}
                             {(ability.can('read',ACLEntityEnum.USERS) || ability.can('update', ACLEntityEnum.USERS) )&& <Route path="users" element={<UsersPage/>}/>}
+                            {(ability.can('read',ACLEntityEnum.ANALITYCS))&& <Route path="analytics" element={<AnalyticPage/>}/>}
                         </Route>
                         {ability.can('read', ACLEntityEnum.AUTH) && <Route path="sign" element={<AuthLayout/>}>
                             <Route path="login" element={<LoginPage/>}/>

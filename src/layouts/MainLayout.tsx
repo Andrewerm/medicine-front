@@ -44,6 +44,10 @@ export const MainLayout: React.FC = () => {
             label: 'Больницы',
             key: 'hospitals',
         },
+        {
+            label: 'Аналитика',
+            key: 'analytics',
+        },
     ]
     const navigate = useNavigate()
     const [selectedKey, setSelectedKey] = useState<string[]>()
