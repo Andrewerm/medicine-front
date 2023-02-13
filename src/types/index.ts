@@ -57,11 +57,11 @@ export enum LoadingStatusesEnum {
     done='done'
 }
 
-export interface IGetReport {
-    data: {
-        textReport: string
-    }
-}
+// export interface IGetReport {
+//     data: {
+//         textReport: string
+//     }
+// }
 export interface IHospitalPost {
         hospital_id: number
 }

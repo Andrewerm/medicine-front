@@ -36,6 +36,7 @@ export const UsersPage: React.FC = () => {
                 message: error_message
             })
             dispatch(setDeleteStatusToIdle())
+            dispatch(setStatusToIdle())
         }
 
     }, [edit_status,delete_status])
