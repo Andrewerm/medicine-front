@@ -6,9 +6,8 @@ import {AxiosError} from "axios";
 import {AbilityContext} from "../hooks/Can";
 import {ProfileDataContext} from "../hooks/ProfileData";
 import axios from "../configs/axios";
-import {useAppSelector} from "../hooks/reduxHooks";
-import {Selector} from "react-redux";
-import {HospitalSelector} from "../components/HospitalSelector";
+import {HospitalSelector} from "../components/ui-components/HospitalSelector";
+
 const {Title} = Typography;
 
 export interface Acl {
