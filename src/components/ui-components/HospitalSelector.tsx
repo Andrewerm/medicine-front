@@ -1,8 +1,8 @@
 import {FC, useEffect} from "react";
 import {Select} from "antd";
-import {useAppDispatch, useAppSelector} from "../hooks/reduxHooks";
-import {fetchHospitals} from "../app/hospitalSlice";
-import {LoadingStatusesEnum} from "../types";
+import {useAppDispatch, useAppSelector} from "../../hooks/reduxHooks";
+import {fetchHospitals} from "../../app/hospitalSlice";
+import {LoadingStatusesEnum} from "../../types";
 
 interface HospitalSelectorProps {
     value?: number,
