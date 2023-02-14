@@ -50,7 +50,7 @@ export const AnalyticPage: FC = () => {
     return (
         <>
             {loadingStatus === LoadingStatusesEnum.loading ? <Spinner/> : <Row gutter={[10, 10]}>{
-                analytics.map(item => <Col key={item.id}>
+                analytics.map(item => <Col span={24} md={12} lg={8} key={item.id}>
                     <Card
                         title={item.title}
                         actions={
