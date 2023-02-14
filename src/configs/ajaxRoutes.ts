@@ -17,6 +17,7 @@ export enum AjaxRoutes {
     GET_HOSPITALS='/guides/hospitals',
     DELETE_HOSPITAL='/guides/hospitals/',
     DELETE_USER='/guides/users/',
-    GET_ANALYTICS='guides/analytics'
+    GET_ANALYTICS='guides/analytics',
+    PUT_ANALYTICS='guides/analytics'
 
 }

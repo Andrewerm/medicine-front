@@ -136,7 +136,7 @@ export interface Parametrer {
     name: string;
     type: string;
     variants: Variant[];
-    value: Array<number>|Date|undefined
+    value: Array<String>|string|undefined,
 }
 
 export interface IAnalytic {
@@ -144,6 +144,8 @@ export interface IAnalytic {
     id: string;
     parametrers: Parametrer[];
     title: string;
+    fileReportStatus: LoadingStatusesEnum
+    fileReport:Blob
 }
 
 export interface IAnalytics {
@@ -153,4 +155,10 @@ export interface IAnalytics {
 export enum ReportInputTypesEnum {
     list='list',
     timestamp='timestamp'
+}
+
+
+export interface ExecuteReportParamsInterface{
+    id: string;
+    parameters?: Array<{id: string, value?: Array<String>|string}>;
 }

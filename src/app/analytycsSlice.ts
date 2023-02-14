@@ -1,9 +1,8 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {IAnalytic, IAnalytics, LoadingStatusesEnum} from "../types";
+import {ExecuteReportParamsInterface, IAnalytic, IAnalytics, LoadingStatusesEnum} from "../types";
 import axios from "../configs/axios";
 import {AjaxRoutes} from "../configs/ajaxRoutes";
 import {AxiosError} from "axios";
-import {hospitalsSlice} from "./hospitalSlice";
 
 export const fetchAnalytics = createAsyncThunk<Array<IAnalytic>, undefined, { rejectValue: string, state: { analytics: AnalyticsStateInterface } }>(
     'analytics/fetchAnalytics',
@@ -21,31 +20,62 @@ export const fetchAnalytics = createAsyncThunk<Array<IAnalytic>, undefined, { re
     }
 )
 
+export const executeReport = createAsyncThunk<{ analitycs_id: string, data: Blob }, string, {
+    rejectValue: { analitycs_id: string, error: string },
+    state: { analytics: AnalyticsStateInterface }
+}>(
+    'analytics/executeReport',
+    async (analitycs_id, {rejectWithValue, getState}) => {
+        const param: ExecuteReportParamsInterface = {
+            id: analitycs_id,
+            parameters: getState().analytics.analytics?.find(item => item.id === analitycs_id)?.parametrers.map(item2 => ({
+                id: item2.id,
+                value: item2.value
+            }))
+        }
+        try {
+            const response = await axios.put<any>(AjaxRoutes.PUT_ANALYTICS, param, {withCredentials: true,  responseType: 'blob'})
+            // debugger
+            return {
+                analitycs_id,
+                data: response.data
+            }
+        } catch (e: unknown) {
+            const error = e as AxiosError
+            return rejectWithValue({
+                analitycs_id,
+                error: error.message
+            })
+        }
+    }
+)
+
 export interface AnalyticsStateInterface {
     analytics: Array<IAnalytic>,
     status: LoadingStatusesEnum;
+    report_status:LoadingStatusesEnum
 }
 
 const initialState: AnalyticsStateInterface = {
     analytics: [],
-    status: LoadingStatusesEnum.idle
+    status: LoadingStatusesEnum.idle,
+    report_status: LoadingStatusesEnum.idle
 }
 
 interface setValueAnalyticInterface {
     analytic_id: string,
-    parameter_id:string,
-    value: Array<number>|Date
+    parameter_id: string,
+    value: Array<String> | string | undefined
 }
 
 export const analyticsSlice = createSlice({
         name: 'analytics',
         initialState,
         reducers: {
-            setValue(state, action:PayloadAction<setValueAnalyticInterface>){
-                debugger
-               const analytic=state.analytics.find(item=>item.id===action.payload.analytic_id)
+            setValue(state, action: PayloadAction<setValueAnalyticInterface>) {
+                const analytic = state.analytics.find(item => item.id === action.payload.analytic_id)
                 if (analytic) {
-                    const parameter=analytic.parametrers.find(item => item.id === action.payload.parameter_id)
+                    const parameter = analytic.parametrers.find(item => item.id === action.payload.parameter_id)
                     if (parameter) parameter.value = action.payload.value
                 }
             }
@@ -61,6 +91,20 @@ export const analyticsSlice = createSlice({
                 .addCase(fetchAnalytics.fulfilled, (state, action) => {
                     state.status = LoadingStatusesEnum.idle
                     if (action.payload) state.analytics = action.payload
+                })
+
+                .addCase(executeReport.pending, (state, action) => {
+                    state.report_status = LoadingStatusesEnum.loading
+                })
+                .addCase(executeReport.rejected, (state, action) => {
+                    state.report_status = LoadingStatusesEnum.failed
+                })
+                .addCase(executeReport.fulfilled, (state, action) => {
+                    const analytic = state.analytics.find(item => item.id === action.payload.analitycs_id)
+                    if (analytic) {
+                        state.report_status = LoadingStatusesEnum.done
+                        analytic.fileReport = action.payload.data
+                    }
                 })
         }
     }
