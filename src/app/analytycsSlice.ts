@@ -1,5 +1,5 @@
 import {createAsyncThunk, createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {ExecuteReportParamsInterface, IAnalytic, IAnalytics, LoadingStatusesEnum} from "../types";
+import {ExecuteReportParamsInterface, IAnalytic, IAnalytics, LoadingStatusesEnum, ParametrValueType} from "../types";
 import axios from "../configs/axios";
 import {AjaxRoutes} from "../configs/ajaxRoutes";
 import {AxiosError} from "axios";
@@ -20,8 +20,8 @@ export const fetchAnalytics = createAsyncThunk<Array<IAnalytic>, undefined, { re
     }
 )
 
-export const executeReport = createAsyncThunk<{ analitycs_id: string, data: Blob }, string, {
-    rejectValue: { analitycs_id: string, error: string },
+export const executeReport = createAsyncThunk<{ analitycs_id: number, data: Blob }, number, {
+    rejectValue: { error: string },
     state: { analytics: AnalyticsStateInterface }
 }>(
     'analytics/executeReport',
@@ -43,7 +43,6 @@ export const executeReport = createAsyncThunk<{ analitycs_id: string, data: Blob
         } catch (e: unknown) {
             const error = e as AxiosError
             return rejectWithValue({
-                analitycs_id,
                 error: error.message
             })
         }
@@ -63,9 +62,9 @@ const initialState: AnalyticsStateInterface = {
 }
 
 interface setValueAnalyticInterface {
-    analytic_id: string,
-    parameter_id: string,
-    value: Array<String> | string | undefined
+    analytic_id: number,
+    parameter_id: number,
+    value: ParametrValueType
 }
 
 export const analyticsSlice = createSlice({

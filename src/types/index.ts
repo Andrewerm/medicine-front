@@ -126,22 +126,32 @@ export enum ACLEntityEnum {
 
 export interface Variant {
     id: number;
+    label: string,
     name_full: string;
-    name_short: string;
     hospital_id?: number;
 }
 
+export type ParametrValueType=Array<number>|string
+
 export interface Parametrer {
-    id: string;
+    id: number;
     name: string;
     type: string;
     variants: Variant[];
-    value: Array<String>|string|undefined,
+    value?: ParametrValueType,
+}
+
+export interface ParametrerArray extends Parametrer{
+    value: Array<number>,
+}
+
+export interface ParametrerString extends Parametrer{
+    value: string,
 }
 
 export interface IAnalytic {
     description: string;
-    id: string;
+    id: number;
     parametrers: Parametrer[];
     title: string;
     fileReportStatus: LoadingStatusesEnum
@@ -159,6 +169,6 @@ export enum ReportInputTypesEnum {
 
 
 export interface ExecuteReportParamsInterface{
-    id: string;
-    parameters?: Array<{id: string, value?: Array<String>|string}>;
+    id: number;
+    parameters?: Array<{id: number, value?: ParametrValueType}>;
 }
