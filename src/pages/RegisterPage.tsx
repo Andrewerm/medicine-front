@@ -123,7 +123,7 @@ export const RegisterPage:FunctionComponent=()=>{
 
             <Form.Item>
                 <Button disabled={!acceptHandlingData} type="primary" block htmlType="submit">
-                    Войти
+                    Зарегистрироваться
                 </Button>
             </Form.Item>
             <Form.Item wrapperCol={{pull: 6}}>

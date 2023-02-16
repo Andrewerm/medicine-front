@@ -17,7 +17,7 @@ import FileSaver from 'file-saver';
 
 export const AnalyticPage: FC = () => {
     const {analytics, status: loadingStatus, report_status} = useAppSelector(state => state.analytics)
-    // const [selectedHospitals, setSelectedHospitals] = useState<Array<number>>([]);
+    const [selectedHospitals, setSelectedHospitals] = useState<Array<number>>([]);
     const dispatch = useAppDispatch()
     const analytic = (analytic_id: number, parameter_id: number): ParametrerArray =>
         analytics?.find(item => item.id === analytic_id)?.parametrers?.find(item2 => item2.id === parameter_id) as ParametrerArray
@@ -39,10 +39,9 @@ export const AnalyticPage: FC = () => {
                     filterOption={(input, option) => (option?.label.toLowerCase() ?? '').includes(input.trim().toLowerCase())}
                     onChange={(value: Array<{ value: number }>) => {
                         const values = value.map((item) => item.value)
-                        // if (analytic(analytic_id, parameter_id)?.name === 'Больница') {
-                        //     setSelectedHospitals(values)
-                        //     console.log('selectedHospitals',selectedHospitals);
-                        // }
+                        if (analytic(analytic_id, parameter_id)?.name === 'Больница') {
+                            setSelectedHospitals(values)
+                        }
                         dispatch(setValue({
                             analytic_id,
                             parameter_id,
@@ -60,10 +59,26 @@ export const AnalyticPage: FC = () => {
                             {menu}
                             <Divider style={{margin: '8px 0'}}/>
                             <Button type="text" icon={<PlusOutlined/>} onClick={() => {
+                                const values=params
+                                    .filter((item2) => {
+                                        const temp = analytic(analytic_id, parameter_id) as Parametrer
+                                        const arr = temp?.value as Array<number>
+                                        if (!arr) return true
+                                        else return !arr.includes(item2.id)
+                                    })
+                                    .filter((item3)=>{
+                                        if (analytic(analytic_id, parameter_id)?.name === 'Сотрудник') {
+                                            return item3.hospital_id && selectedHospitals.includes(item3.hospital_id)
+                                        } else return true
+                                    })
+                                    .map(item4=>item4.id)
+                                if (analytic(analytic_id, parameter_id)?.name === 'Больница') {
+                                    setSelectedHospitals(values)
+                                }
                                 dispatch(setValue({
                                     analytic_id,
                                     parameter_id,
-                                    value: originalList.map((item) => item.id)
+                                    value: values
                                 }))
                             }}>
                                 Добавить все
@@ -77,6 +92,11 @@ export const AnalyticPage: FC = () => {
                             if (!arr) return true
                             else return !arr.includes(item2.id)
                         })
+                        .filter((item3)=>{
+                            if (analytic(analytic_id, parameter_id)?.name === 'Сотрудник') {
+                                return item3.hospital_id && selectedHospitals.includes(item3.hospital_id)
+                            } else return true
+                                })
                         .map(item => ({value: item.id, label: item.label}))}/>
             case ReportInputTypesEnum.timestamp:
                 return <DatePicker
