@@ -167,6 +167,11 @@ export enum ReportInputTypesEnum {
     timestamp='timestamp'
 }
 
+export enum typeEntitySelector{
+    hospital='Больница',
+    employee='Сотрудник'
+}
+
 
 export interface ExecuteReportParamsInterface{
     id: number;
