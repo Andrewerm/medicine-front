@@ -162,6 +162,11 @@ export interface IAnalytics {
     analytics: IAnalytic[];
 }
 
+export interface IErrorFromServer{
+    error: number,
+    message: string
+}
+
 export enum ReportInputTypesEnum {
     list='list',
     timestamp='timestamp'

@@ -4,7 +4,7 @@ import {AjaxRoutes} from "../configs/ajaxRoutes";
 import axios, {AxiosError} from "axios";
 import {ACLInterface} from "../hooks/Can";
 import React, {useEffect, useRef} from "react";
-import {IUserProfile} from "../types";
+import {IErrorFromServer, IUserProfile} from "../types";
 
 const {Title} = Typography;
 
@@ -28,8 +28,8 @@ export const RemindPasswordPage: React.FC = () => {
                 modal.info({ title:'Запрос на восстановление пароля отправлен'});
                 navigate(AjaxRoutes.ROUTE_LOGIN, {replace: true})
             })
-            .catch((err: AxiosError) => {
-                notification.error({ message:err.message})
+            .catch((err: AxiosError<IErrorFromServer>) => {
+                notification.error({ message:err.response?.data.message||err.message})
             })
     };
 
@@ -64,11 +64,11 @@ export const RemindPasswordPage: React.FC = () => {
                         Запросить пароль
                     </Button>
                 </Form.Item>
-                <Form.Item wrapperCol={{pull: 6}}>
+                <Form.Item >
                     <Link to={AjaxRoutes.ROUTE_REMIND_PASSWORD}>Забыли пароль?</Link><p/>
                 </Form.Item>
-                <Form.Item wrapperCol={{pull: 6}}>
-                    <Link to={AjaxRoutes.ROUTE_LOGIN}>Страница авторизации</Link>
+                <Form.Item >
+                    <Link to={AjaxRoutes.ROUTE_LOGIN}>На страницу авторизации</Link>
                 </Form.Item>
             </Form>
         </>

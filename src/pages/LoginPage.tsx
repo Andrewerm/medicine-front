@@ -4,7 +4,7 @@ import {AjaxRoutes} from "../configs/ajaxRoutes";
 import axios, {AxiosError} from "axios";
 import {AbilityContext, ACLInterface} from "../hooks/Can";
 import React, {useContext, useEffect, useRef} from "react";
-import {IUserProfile} from "../types";
+import {IErrorFromServer, IUserProfile} from "../types";
 import {ProfileDataContext} from "../hooks/ProfileData";
 
 const {Title} = Typography;
@@ -25,7 +25,7 @@ export const LoginPage: React.FC = () => {
     useEffect(() => {
         if (inputRef.current) inputRef.current.focus()
     }, [])
-    const onFinish = (values: any) => {
+    const onFinish = () => {
         axios.post<IGetLogin>(AjaxRoutes.LOGIN, form.getFieldsValue(),  { withCredentials: true })
             .then(response => {
                 ability.update(response.data.acl)
@@ -33,8 +33,8 @@ export const LoginPage: React.FC = () => {
                     setDataUser(response.data.user_data)
                 navigate(AjaxRoutes.HOME, {replace: true})
             })
-            .catch((err: AxiosError) => {
-                notification.error({ message:err.message})
+            .catch((err: AxiosError<IErrorFromServer>) => {
+                notification.error({ message:err.response?.data.message||err.message})
             })
     };
 
@@ -81,10 +81,10 @@ export const LoginPage: React.FC = () => {
                         Войти
                     </Button>
                 </Form.Item>
-                <Form.Item wrapperCol={{pull: 6}}>
+                <Form.Item>
                     <Link to={AjaxRoutes.ROUTE_REMIND_PASSWORD}>Забыли пароль?</Link><p/>
                 </Form.Item>
-                <Form.Item wrapperCol={{pull: 6}}>
+                <Form.Item>
                     <Link to={AjaxRoutes.ROUTE_REGISTER}>Зарегистрироваться</Link>
                 </Form.Item>
             </Form>

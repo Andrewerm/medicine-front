@@ -7,6 +7,7 @@ import {AbilityContext} from "../hooks/Can";
 import {ProfileDataContext} from "../hooks/ProfileData";
 import axios from "../configs/axios";
 import {HospitalSelector} from "../components/ui-components/HospitalSelector";
+import {IErrorFromServer} from "../types";
 
 const {Title} = Typography;
 
@@ -54,12 +55,12 @@ export const RegisterPage:FunctionComponent=()=>{
                 modal.success({ title:'Заявка на регистрацию пользователя отправлена'});
                 navigate(AjaxRoutes.ROUTE_LOGIN, {replace: true})
             })
-            .catch((err: AxiosError<{message:string}>) => {
+            .catch((err: AxiosError<IErrorFromServer>) => {
                 if (err.response?.status===422) {
                     setEmailValidStatus("error")
                     setHelpText(err.response.data.message)
                 }
-                    else notification.error({ message:err.message})
+                    else notification.error({ message:err.response?.data.message||err.message})
             })
     };
 
