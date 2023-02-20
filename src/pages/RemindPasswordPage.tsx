@@ -65,9 +65,6 @@ export const RemindPasswordPage: React.FC = () => {
                     </Button>
                 </Form.Item>
                 <Form.Item >
-                    <Link to={AjaxRoutes.ROUTE_REMIND_PASSWORD}>Забыли пароль?</Link><p/>
-                </Form.Item>
-                <Form.Item >
                     <Link to={AjaxRoutes.ROUTE_LOGIN}>На страницу авторизации</Link>
                 </Form.Item>
             </Form>
