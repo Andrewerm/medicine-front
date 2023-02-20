@@ -56,9 +56,7 @@ export const MainLayout: React.FC = () => {
         navigate(e.key)
     }
     useEffect(() => {
-        console.log('location.pathname', location.pathname);
         setSelectedKey([location.pathname.slice(1)])
-
     }, [location]);
 
     return (

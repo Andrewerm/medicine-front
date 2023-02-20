@@ -107,7 +107,7 @@ export const AnalyticPage: FC = () => {
             {loadingStatus === LoadingStatusesEnum.loading ? <Spinner/> : <Row wrap gutter={[10, 10]}>{
                 analytics.map(item => <Col span={24} lg={12} key={item.id}>
                     <Card
-                        title={item.description}
+                        title={item.title}
                         actions={
                             [<Space.Compact><Button
                                 disabled={item.parametrers.some(item2 => !item2.value)}
@@ -125,7 +125,7 @@ export const AnalyticPage: FC = () => {
                         }
                     >
                         <Row gutter={[10, 10]}>
-                            <Col span={24}>{item.title}</Col>
+                            <Col span={24}>{item.description}</Col>
                             {item.parametrers.map(item2 => <Col
                                 key={item2.id}
                                 span={item2.type === 'list' ? 24 : 12}

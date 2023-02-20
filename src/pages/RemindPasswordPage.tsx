@@ -2,10 +2,9 @@ import {Typography, Button, Form, Input, InputRef, App} from 'antd';
 import {Link, useNavigate} from "react-router-dom";
 import {AjaxRoutes} from "../configs/ajaxRoutes";
 import axios, {AxiosError} from "axios";
-import {AbilityContext, ACLInterface} from "../hooks/Can";
-import React, {useContext, useEffect, useRef} from "react";
+import {ACLInterface} from "../hooks/Can";
+import React, {useEffect, useRef} from "react";
 import {IUserProfile} from "../types";
-import {ProfileDataContext} from "../hooks/ProfileData";
 
 const {Title} = Typography;
 
@@ -14,24 +13,20 @@ export interface IGetLogin {
     user_data: IUserProfile
 }
 
-export const LoginPage: React.FC = () => {
+export const RemindPasswordPage: React.FC = () => {
     const inputRef = useRef<InputRef>(null);
     const [form] = Form.useForm();
-    if (process.env.NODE_ENV==='development') form.setFieldsValue({ email: 'a.m.vinokurov@gmail.com', password: '123456789' });
-    const ability = useContext(AbilityContext);
-    const {setDataUser} = useContext(ProfileDataContext);
+    if (process.env.NODE_ENV==='development') form.setFieldsValue({ email: 'a.m.vinokurov@gmail.com' });
     const navigate = useNavigate()
-    const {notification} = App.useApp();
+    const {notification, modal } = App.useApp();
     useEffect(() => {
         if (inputRef.current) inputRef.current.focus()
     }, [])
     const onFinish = (values: any) => {
-        axios.post<IGetLogin>(AjaxRoutes.LOGIN, form.getFieldsValue(),  { withCredentials: true })
+        axios.post<IGetLogin>(AjaxRoutes.POST_REMIND_PASSWORD, form.getFieldsValue())
             .then(response => {
-                ability.update(response.data.acl)
-                if (response.data?.user_data)
-                    setDataUser(response.data.user_data)
-                navigate(AjaxRoutes.HOME, {replace: true})
+                modal.info({ title:'Запрос на восстановление пароля отправлен'});
+                navigate(AjaxRoutes.ROUTE_LOGIN, {replace: true})
             })
             .catch((err: AxiosError) => {
                 notification.error({ message:err.message})
@@ -43,7 +38,7 @@ export const LoginPage: React.FC = () => {
     };
     return (
         <>
-            <Title level={5}>Авторизация</Title>
+            <Title level={5}>Восстановление пароля</Title>
             <Form
                 form={form}
                 name="basic"
@@ -56,36 +51,24 @@ export const LoginPage: React.FC = () => {
                 <Form.Item
                     label="Email"
                     name="email"
-                    rules={[{required: true, message: 'Пожалуйста введите email!'}]}
+                    rules={[{required: true, message: 'Пожалуйста введите email', type: "email"}]}
                 >
                     <Input
-                        placeholder="Введите Email или телефон"
+                        placeholder="Введите Email"
                         ref={inputRef}
                     />
                 </Form.Item>
 
-                <Form.Item
-                    label="Пароль"
-                    name="password"
-                    rules={[{required: true, message: 'Пожалуйста введите пароль!'}]}
-                >
-                    <Input.Password/>
-                </Form.Item>
-
-                {/*<Form.Item name="remember" valuePropName="checked" wrapperCol={{span: 16}}>*/}
-                {/*    <Checkbox>Remember me</Checkbox>*/}
-                {/*</Form.Item>*/}
-
                 <Form.Item>
                     <Button type="primary" block htmlType="submit">
-                        Войти
+                        Запросить пароль
                     </Button>
                 </Form.Item>
                 <Form.Item wrapperCol={{pull: 6}}>
                     <Link to={AjaxRoutes.ROUTE_REMIND_PASSWORD}>Забыли пароль?</Link><p/>
                 </Form.Item>
                 <Form.Item wrapperCol={{pull: 6}}>
-                    <Link to={AjaxRoutes.ROUTE_REGISTER}>Зарегистрироваться</Link>
+                    <Link to={AjaxRoutes.ROUTE_LOGIN}>Страница авторизации</Link>
                 </Form.Item>
             </Form>
         </>

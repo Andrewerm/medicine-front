@@ -1,5 +1,5 @@
 import React, {FunctionComponent, useContext, useState} from "react";
-import {Button, Checkbox, Form, Input, Typography} from "antd";
+import {App, Button, Checkbox, Form, Input, Typography} from "antd";
 import {Link, useNavigate} from "react-router-dom";
 import {AjaxRoutes} from "../configs/ajaxRoutes";
 import {AxiosError} from "axios";
@@ -39,19 +39,27 @@ export const RegisterPage:FunctionComponent=()=>{
     const ability = useContext(AbilityContext);
     const navigate = useNavigate()
     const [acceptHandlingData, setAcceptHandlingData] = useState(false);
+    const [emailValidStatus, setEmailValidStatus] = useState<'success' | 'warning' | 'error' | 'validating' | undefined>();
+    const [helpText, setHelpText] = useState<string|undefined>();
+    const {notification, modal} = App.useApp();
     const {setDataUser} = useContext(ProfileDataContext);
     const onFinish = (values: any) => {
         let params=form.getFieldsValue()
         params={role_id:2, ...params}
         axios.post<IGetRegister>(AjaxRoutes.REGISTER, params)
             .then(response => {
-                ability.update(response.data.acl)
-                if (response.data?.user_data)
-                    setDataUser(response.data.user_data)
-                navigate(AjaxRoutes.HOME, {replace: true})
+                // ability.update(response.data.acl)
+                // if (response.data?.user_data)
+                //     setDataUser(response.data.user_data)
+                modal.success({ title:'Заявка на регистрацию пользователя отправлена'});
+                navigate(AjaxRoutes.ROUTE_LOGIN, {replace: true})
             })
-            .catch((err: AxiosError) => {
-                console.error(err)
+            .catch((err: AxiosError<{message:string}>) => {
+                if (err.response?.status===422) {
+                    setEmailValidStatus("error")
+                    setHelpText(err.response.data.message)
+                }
+                    else notification.error({ message:err.message})
             })
     };
 
@@ -71,6 +79,8 @@ export const RegisterPage:FunctionComponent=()=>{
         >
             <Form.Item
                 name="email"
+                validateStatus={emailValidStatus}
+                help={helpText}
                 rules={[{required: true, message: 'Email обязателен!', type: "email"}]}
             >
                 <Input

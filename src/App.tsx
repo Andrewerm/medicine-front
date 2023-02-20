@@ -15,6 +15,7 @@ import {useAbility} from "@casl/react";
 import {TopPanelContext} from "./hooks/topPanel";
 import {ACLEntityEnum} from "./types";
 import {AnalyticPage} from "./pages/AnalyticPage";
+import {RemindPasswordPage} from "./pages/RemindPasswordPage";
 
 
 export const App: React.FC = () => {
@@ -46,6 +47,7 @@ export const App: React.FC = () => {
                         {ability.can('read', ACLEntityEnum.AUTH) && <Route path="sign" element={<AuthLayout/>}>
                             <Route path="login" element={<LoginPage/>}/>
                             <Route path="register" element={<RegisterPage/>}/>
+                            <Route path="remind" element={<RemindPasswordPage/>}/>
                         </Route>}
                         <Route path="*" element={<NotFoundPage/>}/>
                     </Route>
