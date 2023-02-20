@@ -7,7 +7,7 @@ import {
     Parametrer,
     ParametrerArray,
     ParametrerString,
-    ReportInputTypesEnum, typeEntitySelector
+    ReportInputTypesEnum, typeEntitySelector, Variant
 } from "../types";
 import dayjs from 'dayjs';
 import {Spinner} from "../components/Spinner";
@@ -29,6 +29,17 @@ export const AnalyticPage: FC = () => {
         switch (params.type) {
             case ReportInputTypesEnum.list:
                 const originalList = analytic(analytic_id, params.id)?.variants
+                const filter1 = (item2: Variant) => {
+                    const temp = analytic(analytic_id, params.id) as Parametrer
+                    const arr = temp?.value as Array<number>
+                    if (!arr) return true
+                    else return !arr.includes(item2.id)
+                }
+                const filter2 = (item3: Variant) => { // для селектора сотрудников дополнительный фильтр, зависимый от выбранной больницы
+                    if (selectedHospitals.length && analytic(analytic_id, params.id)?.name === typeEntitySelector.employee) {
+                        return item3.hospital_id && selectedHospitals.includes(item3.hospital_id)
+                    } else return true
+                }
                 return <Select
                     allowClear
                     labelInValue
@@ -39,12 +50,12 @@ export const AnalyticPage: FC = () => {
                     filterOption={(input, option) => (option?.label.toLowerCase() ?? '').includes(input.trim().toLowerCase())}
                     onChange={(value: Array<{ value: number }>) => {
                         const values = value.map((item) => item.value)
-                        if (analytic(analytic_id, params.id)?.name === 'Больница') {
+                        if (analytic(analytic_id, params.id)?.name === typeEntitySelector.hospital) {
                             setSelectedHospitals(values)
                         }
                         dispatch(setValue({
                             analytic_id,
-                            parameter_id:params.id,
+                            parameter_id: params.id,
                             value: values
                         }))
                     }}
@@ -59,25 +70,16 @@ export const AnalyticPage: FC = () => {
                             {menu}
                             <Divider style={{margin: '8px 0'}}/>
                             <Button type="text" icon={<PlusOutlined/>} onClick={() => {
-                                const values=params.variants
-                                    .filter((item2) => {
-                                        const temp = analytic(analytic_id, params.id) as Parametrer
-                                        const arr = temp?.value as Array<number>
-                                        if (!arr) return true
-                                        else return !arr.includes(item2.id)
-                                    })
-                                    .filter((item3)=>{
-                                        if (analytic(analytic_id, params.id)?.name === typeEntitySelector.employee) {
-                                            return item3.hospital_id && selectedHospitals.includes(item3.hospital_id)
-                                        } else return true
-                                    })
-                                    .map(item4=>item4.id)
+                                const values = params.variants
+                                    .filter(filter1)
+                                    .filter(filter2)
+                                    .map(item4 => item4.id)
                                 if (analytic(analytic_id, params.id)?.name === typeEntitySelector.hospital) {
                                     setSelectedHospitals(values)
                                 }
                                 dispatch(setValue({
                                     analytic_id,
-                                    parameter_id:params.id,
+                                    parameter_id: params.id,
                                     value: values
                                 }))
                             }}>
@@ -86,24 +88,15 @@ export const AnalyticPage: FC = () => {
                         </>
                     )}
                     options={params.variants
-                        .filter((item2) => {
-                            const temp = analytic(analytic_id, params.id) as Parametrer
-                            const arr = temp?.value as Array<number>
-                            if (!arr) return true
-                            else return !arr.includes(item2.id)
-                        })
-                        .filter((item3)=>{
-                            if (analytic(analytic_id, params.id)?.name === 'Сотрудник') {
-                                return item3.hospital_id && selectedHospitals.includes(item3.hospital_id)
-                            } else return true
-                                })
+                        .filter(filter1)
+                        .filter(filter2)
                         .map(item => ({value: item.id, label: item.label}))}/>
             case ReportInputTypesEnum.timestamp:
                 return <DatePicker
                     key={params.id}
                     placeholder={params.name}
                     onChange={(_, dayString) => {
-                        if (dayString) dispatch(setValue({analytic_id, parameter_id:params.id, value: dayString}))
+                        if (dayString) dispatch(setValue({analytic_id, parameter_id: params.id, value: dayString}))
                     }}
                     value={analytic(analytic_id, params.id)?.value ? dayjs(analyticDate(analytic_id, params.id)?.value) : null}
                 />
@@ -131,11 +124,11 @@ export const AnalyticPage: FC = () => {
                             ]
                         }
                     >
-                        <Row gutter={[10,10]}>
+                        <Row gutter={[10, 10]}>
                             <Col span={24}>{item.title}</Col>
                             {item.parametrers.map(item2 => <Col
                                 key={item2.id}
-                                span={item2.type==='list'?24:12}
+                                span={item2.type === 'list' ? 24 : 12}
                             >
                                 {SelectRender(item2, item.id)}
                             </Col>)}
