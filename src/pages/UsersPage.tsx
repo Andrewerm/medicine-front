@@ -154,7 +154,7 @@ export const UsersPage: React.FC = () => {
                         </Col>
                     </Row>
                 </Col>
-                <Col span={24} md={20} lg={16}>
+                <Col span={24} md={20} lg={17}>
                     <Table
                         loading={(status === LoadingStatusesEnum.loading || status_hospitals === LoadingStatusesEnum.loading)}
                         rowKey={(record) => record.id}
