@@ -112,7 +112,7 @@ export const UsersPage: React.FC = () => {
                 return hospital ? hospital.name_short : '...'
             }
             case 'active_switcher': return (text: boolean)=>{ return text?'да':'нет'}
-            case 'role_selector': return (text: string)=>{ return text==="1"?'Админ':'Медработник'}
+            case 'role_selector': return (text: number)=>{ return text===1?'Админ':'Медработник'}
         }
     }
 
